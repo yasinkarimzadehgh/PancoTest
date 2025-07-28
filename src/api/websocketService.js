@@ -1,59 +1,76 @@
 // src/api/websocketService.js
 
-import { Client } from '@stomp/stompjs';
-import { Buffer } from 'buffer';
-
-global.Buffer = Buffer;
+import { Alert } from 'react-native';
 
 const SESSION_ID = 'a4c469257f583f1f98263fec5075e019';
+const KAFKA_WEBSOCKET_URL = `wss://cmb.panco.me/ws/${SESSION_ID}`;
 
-const WEBSOCKET_CONFIG = {
-  brokerURL: 'wss://api.panco.me:15673/ws',
-  connectHeaders: {
-    login: 'panco',
-    passcode: 'panco',
-    host: '/', 
-  },
-  heartbeatIncoming: 4000,
-  heartbeatOutgoing: 4000,
-};
+let ws = null;
+let messageEmitter = null; 
+let pingTimeout = null;
 
-let client = null;
-let messageEmitter = null; // --- کد جدید: یک متغیر برای نگهداری emitter
-
-// --- کد جدید: تابعی که saga آن را ثبت می‌کند ---
 export const setWebSocketMessageHandler = (emitter) => {
   messageEmitter = emitter;
 };
 
-const onMessageReceived = (message) => {
+const sendPing = () => {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send('PING');
+    pingTimeout = setTimeout(sendPing, 20000); 
+  }
+};
+
+const onMessageReceived = (event) => {
+  const messageData = event.data;
+  if (messageData === 'PONG') {
+    console.log('[WebSocket] Pong received.');
+    return;
+  }
+  
+  console.log('[WebSocket] پیام جدید دریافت شد:', messageData);
+
   try {
-    const parsedData = JSON.parse(message.body);
-    console.log('[WebSocket] پیام جدید دریافت شد:', parsedData);
-    
-    // اگر یک listener (از saga) ثبت شده بود، پیام را به آن بفرست
     if (messageEmitter) {
-      messageEmitter(parsedData);
+      // پیام خام را برای saga ارسال می‌کنیم تا saga خودش آن را parse کند
+      messageEmitter({ body: messageData });
     }
-    
   } catch (error) {
-    console.error('[WebSocket] خطای پردازش پیام:', error);
+    console.error('[WebSocket] خطای پردازش پیام کافکا:', error);
   }
 };
 
 export const initWebSocket = () => {
-  if (client && client.active) return;
-
-  client = new Client({
-    ...WEBSOCKET_CONFIG,
-    onConnect: () => {
-      console.log('[WebSocket] اتصال با موفقیت برقرار شد.');
-      client.subscribe(`/queue/${SESSION_ID}`, onMessageReceived);
-    },
-    onStompError: (frame) => console.error('[WebSocket] خطای STOMP:', frame.headers['message']),
-    onWebSocketError: (event) => console.error('[WebSocket] خطا در اتصال WebSocket:', event),
-    onDisconnect: () => console.log('[WebSocket] اتصال قطع شد.'),
-  });
+  if (ws && ws.readyState === WebSocket.OPEN) return;
   
-  client.activate();
+  console.log(`[WebSocket] در حال اتصال به کافکا: ${KAFKA_WEBSOCKET_URL}`);
+  
+  if (ws) ws.close();
+  if (pingTimeout) clearTimeout(pingTimeout);
+
+  ws = new WebSocket(KAFKA_WEBSOCKET_URL);
+
+  ws.onopen = () => {
+    console.log('[WebSocket] اتصال کافکا با موفقیت برقرار شد.');
+    sendPing();
+  };
+
+  ws.onmessage = onMessageReceived;
+
+  ws.onerror = (error) => {
+    console.error('[WebSocket] خطا در اتصال کافکا:', error.message);
+  };
+
+  ws.onclose = (event) => {
+    console.log('[WebSocket] اتصال کافکا بسته شد.');
+    if (pingTimeout) clearTimeout(pingTimeout);
+    setTimeout(initWebSocket, 5000); // تلاش مجدد برای اتصال
+  };
+};
+
+export const disconnectWebSocket = () => {
+    if (pingTimeout) clearTimeout(pingTimeout);
+    if (ws) {
+        ws.close();
+        ws = null;
+    }
 };

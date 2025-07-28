@@ -6,10 +6,12 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    padding: 16,
-    color: colors.text,
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red'
   },
 });

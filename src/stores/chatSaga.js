@@ -7,6 +7,9 @@ export const FETCH_CHATS = 'FETCH_CHATS';
 function* fetchChatsSaga(action) {
   const { startLoading, setChats, setError } = useChatStore.getState();
   const syncType = action.payload?.syncType || 1;
+
+  // ----> لاگ شماره ۵: شروع فرآیند fetch
+  console.log(`[LOG 5 - Chat Saga] Starting fetchChatsSaga for syncType ${syncType} at: ${new Date().toLocaleTimeString()}`);
   
   try {
     if (syncType === 1) {
@@ -14,6 +17,9 @@ function* fetchChatsSaga(action) {
     }
 
     const response = yield call(syncChats, syncType);
+    
+    // ----> لاگ شماره ۶: دریافت پاسخ از API
+    console.log(`[LOG 6 - Chat Saga] API response received at: ${new Date().toLocaleTimeString()}`);
 
     if (response.data.status === 'success') {
       const updateMessageId = response.data.update_message_id;
@@ -23,6 +29,7 @@ function* fetchChatsSaga(action) {
       
       const updates = response.data.updates;
       if (updates) {
+        // ... (منطق پردازش چت‌ها)
         const chatsArray = Object.keys(updates).map(key => {
             const chatData = updates[key];
             const messages = chatData.filter(item => item.message_id);
@@ -40,7 +47,9 @@ function* fetchChatsSaga(action) {
               otherPartyId: chatInfo?.other_party_id || null, 
             };
         });
-        
+
+        // ----> لاگ شماره ۷: به‌روزرسانی نهایی UI
+        console.log(`[LOG 7 - Chat Saga] Updating UI (Zustand) at: ${new Date().toLocaleTimeString()}`);
         setChats(chatsArray);
       } else {
         setChats([]);

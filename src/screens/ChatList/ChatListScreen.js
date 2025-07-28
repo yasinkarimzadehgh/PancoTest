@@ -1,6 +1,6 @@
 // src/screens/ChatList/ChatListScreen.js
 import React, { useState, useCallback } from 'react';
-import { View, Alert, FlatList, Text, ActivityIndicator } from 'react-native';
+import { View, Alert, FlatList, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import Header from '../../components/Header/Header';
@@ -10,16 +10,12 @@ import EmptyListComponent from '../../components/EmptyListComponent/EmptyListCom
 import useChatStore from '../../stores/chatStore';
 import { FETCH_CHATS } from '../../stores/chatSaga';
 import styles from './ChatListScreen.styles';
-import { colors } from '../../styles/colors';
-
-// این صفحه دیگر مسئول بارگذاری اولیه نیست
 
 const ChatListScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { chats, isLoading, error } = useChatStore();
+  
+  const { chats, error } = useChatStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // useEffect یا useFocusEffect برای بارگذاری اولیه حذف شد!
 
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
@@ -29,9 +25,7 @@ const ChatListScreen = ({ navigation }) => {
     }, 1500); 
   }, [dispatch]);
   
-  const handleNewChatPress = () => {
-    Alert.alert('پیام جدید', 'عملکرد ایجاد چت جدید در اینجا پیاده‌سازی می‌شود.');
-  };
+  const handleNewChatPress = () => Alert.alert('پیام جدید', 'عملکرد ایجاد چت جدید در اینجا پیاده‌سازی می‌شود.');
   
   const handleChatPress = (chat) => {
     if (chat.otherPartyId) {
@@ -41,24 +35,10 @@ const ChatListScreen = ({ navigation }) => {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <ChatListItem
-      name={item.name}
-      lastMessage={item.lastMessage}
-      time={item.time}
-      unreadCount={item.unreadCount}
-      avatarUrl={item.avatarUrl}
-      onPress={() => handleChatPress(item)}
-    />
-  );
+  const renderItem = ({ item }) => ( <ChatListItem {...item} onPress={() => handleChatPress(item)} /> );
   
-  // شرط isLoading از اینجا هم برداشته می‌شود چون SplashScreen آن را مدیریت می‌کند
   if (error) {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{color: 'red'}}>خطا در بارگذاری: {error}</Text>
-        </View>
-    );
+    return ( <View style={styles.errorContainer}><Text style={styles.errorText}>خطا: {error}</Text></View> );
   }
   
   return (
@@ -71,7 +51,6 @@ const ChatListScreen = ({ navigation }) => {
         onRefresh={handleRefresh}
         refreshing={isRefreshing}
         ListEmptyComponent={
-          // لودر را از اینجا هم حذف می‌کنیم تا فقط در صورت خالی بودن واقعی نمایش داده شود
           <EmptyListComponent
             title="هنوز گپی نداری!"
             message="برای شروع گفتگو، دکمه + را لمس کن."
@@ -80,7 +59,7 @@ const ChatListScreen = ({ navigation }) => {
         contentContainerStyle={{ flexGrow: 1 }}
       />
       <FloatingActionButton onPress={handleNewChatPress} />
-    </View>
+    </View> // <--- اینجا تصحیح شد
   );
 };
 
