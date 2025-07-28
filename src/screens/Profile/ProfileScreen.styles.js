@@ -1,5 +1,3 @@
-// src/screens/Profile/ProfileScreen.styles.js
-
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 
@@ -8,47 +6,68 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  profileContainer: {
-    alignItems: 'center',
-    marginTop: 30,
-    paddingHorizontal: 20,
+  scrollView: {
+    flex: 1,
   },
-  avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: colors.lightGray,
+  profileHeader: {
+    alignItems: 'center',
+    paddingVertical: 32,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   name: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: colors.text,
-    marginTop: 20,
+    color: colors.textPrimary,
+    marginTop: 16,
   },
-  phone: {
+  username: {
     fontSize: 16,
-    color: '#6B7280',
-    marginTop: 8,
+    color: colors.textSecondary,
+    marginTop: 4,
   },
-  bio: {
+  infoSection: {
+    padding: 16,
+  },
+  infoRow: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  infoLabel: {
+    fontSize: 16,
+    color: colors.textPrimary,
+    marginRight: 12,
+  },
+  infoValue: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    flex: 1,
+    textAlign: 'left',
+  },
+  bioRow: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingVertical: 12,
+  },
+  bioText: {
     fontSize: 15,
-    color: colors.text,
-    textAlign: 'center',
-    marginTop: 15,
-    paddingHorizontal: 20,
+    color: colors.textPrimary,
+    lineHeight: 22,
+    marginTop: 8,
+    textAlign: 'left',
+    alignSelf: 'stretch',
   },
-  button: {
-    backgroundColor: colors.lightGray,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 30,
-    width: '100%',
+  editButton: {
+    marginTop: 24,
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
   },
-  buttonText: {
-    color: colors.primary,
+  editButtonText: {
+    color: colors.white,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 'bold',
   },
 });

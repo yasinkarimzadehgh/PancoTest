@@ -29,3 +29,24 @@ export const getProfileInfo = (userId) => {
         headers: { 'Content-Type': 'multipart/form-data' },
     });
 };
+
+export const clearHistory = (chatIds) => {
+  console.log(`[API Service] Sending delete request for chat IDs:`, chatIds);
+  const url = `${BASE_URL}/clear_history?$=${SESSION_ID}`;
+  const body = new FormData();
+  body.append('chat_ids', JSON.stringify(chatIds));
+  body.append('delete', 1);
+  return axios.post(url, body, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
+
+export const pinChats = (pinnedChatIds) => {
+  console.log(`[API Service] Sending pinned chat IDs:`, pinnedChatIds);
+  const url = `${BASE_URL}/pin_chat?$=${SESSION_ID}`;
+  const body = new FormData();
+  body.append('chat_ids', JSON.stringify(pinnedChatIds));
+  return axios.post(url, body, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};

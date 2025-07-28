@@ -1,19 +1,25 @@
 // src/screens/Profile/ProfileScreen.js
-
 import React, { useEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 import ProfileHeader from '../../components/ProfileHeader/ProfileHeader';
-import useProfileStore from '../../stores/profileStore'; // استور پروفایل
-import { FETCH_PROFILE } from '../../stores/profileSaga'; // اکشن ساگا
+import Avatar from '../../components/Avatar/Avatar'; // استفاده از کامپوننت آواتار
+import useProfileStore from '../../stores/profileStore';
+import { FETCH_PROFILE } from '../../stores/profileSaga';
+import { getImageUrl } from '../../utils/imageUtils'; // ایمپورت ابزار ساخت URL
 import styles from './ProfileScreen.styles';
 import { colors } from '../../styles/colors';
 
-const ProfileScreen = ({ route, navigation }) => {
-  const { userId } = route.params; // دریافت ID از پارامترهای ناوبری
-  const dispatch = useDispatch();
+const InfoRow = ({ label, value }) => (
+  <View style={styles.infoRow}>
+    <Text style={styles.infoLabel}>{label}</Text>
+    <Text style={styles.infoValue}>{value}</Text>
+  </View>
+);
 
-  // اتصال به stateهای Zustand
+const ProfileScreen = ({ route, navigation }) => {
+  const { userId } = route.params;
+  const dispatch = useDispatch();
   const { profile, isLoading, error } = useProfileStore();
 
   useEffect(() => {
@@ -23,40 +29,36 @@ const ProfileScreen = ({ route, navigation }) => {
   }, [userId, dispatch]);
 
   if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
+    return <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size="large" color={colors.primary} /></View>;
   }
 
   if (error || !profile) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>خطا در بارگذاری پروفایل: {error}</Text>
-      </View>
-    );
+    return <View style={{flex: 1, justifyContent: 'center'}}><Text>خطا: {error}</Text></View>;
   }
-
-  const avatarUrl = profile.image_path
-    ? `https://media.panco.me/${profile.image_server_id}/${profile.image_path}`
-    : null;
+  
+  // استفاده از ابزار جدید برای ساخت URL
+  const avatarUrl = getImageUrl(profile.image_server_id, profile.image_path);
 
   return (
     <View style={styles.container}>
       <ProfileHeader title="پروفایل" onBackPress={() => navigation.goBack()} />
-      <ScrollView>
-        <View style={styles.profileContainer}>
-          <Image
-            style={styles.avatar}
-            source={avatarUrl ? { uri: avatarUrl } : require('../../assets/images/chat/user.webp')}
-          />
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.profileHeader}>
+          <Avatar name={profile.name} imageUrl={avatarUrl} size={100} />
           <Text style={styles.name}>{profile.name || 'کاربر پنکو'}</Text>
-          <Text style={styles.phone}>{profile.phone_number || ''}</Text>
-          <Text style={styles.bio}>{profile.description || ''}</Text>
+          <Text style={styles.username}>@{profile.user_name || '---'}</Text>
+        </View>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>ویرایش پروفایل</Text>
+        <View style={styles.infoSection}>
+          <InfoRow label="شماره موبایل" value={profile.phone_number || 'محفوظ'} />
+          <View style={styles.bioRow}>
+            <Text style={styles.infoLabel}>داستان</Text>
+            <Text style={styles.bioText}>
+              {profile.description || 'توضیحاتی ثبت نشده است.'}
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.editButton}>
+            <Text style={styles.editButtonText}>ویرایش پروفایل</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
