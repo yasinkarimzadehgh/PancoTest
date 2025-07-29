@@ -25,7 +25,7 @@ const ChatListScreen = ({ navigation }) => {
     setIsRefreshing(true);
     dispatch({ type: FETCH_CHATS, payload: { syncType: 2 } });
     setTimeout(() => {
-      setIsRefreshing(false);
+        setIsRefreshing(false);
     }, 1500);
   }, [dispatch]);
 

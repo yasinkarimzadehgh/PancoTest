@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const SESSION_ID = 'a4c469257f583f1f98263fec5075e019';
+const SESSION_ID = '1209e015a0293cd99edb8a7024dcf0ba';
 const BASE_URL = 'https://api.panco.me/a/17';
 
 export const syncChats = (syncType = 1) => {
@@ -31,7 +31,6 @@ export const getProfileInfo = (userId) => {
 };
 
 export const clearHistory = (chatIds) => {
-  console.log(`[API Service] Sending delete request for chat IDs:`, chatIds);
   const url = `${BASE_URL}/clear_history?$=${SESSION_ID}`;
   const body = new FormData();
   body.append('chat_ids', JSON.stringify(chatIds));
@@ -42,7 +41,6 @@ export const clearHistory = (chatIds) => {
 };
 
 export const pinChats = (pinnedChatIds) => {
-  console.log(`[API Service] Sending pinned chat IDs:`, pinnedChatIds);
   const url = `${BASE_URL}/pin_chat?$=${SESSION_ID}`;
   const body = new FormData();
   body.append('chat_ids', JSON.stringify(pinnedChatIds));
