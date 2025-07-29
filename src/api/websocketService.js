@@ -1,9 +1,5 @@
-// src/api/websocketService.js
-
+import { KAFKA_WEBSOCKET_URL } from './config';
 import { Alert } from 'react-native';
-
-const SESSION_ID = 'a4c469257f583f1f98263fec5075e019';
-const KAFKA_WEBSOCKET_URL = `wss://cmb.panco.me/ws/${SESSION_ID}`;
 
 let ws = null;
 let messageEmitter = null; 

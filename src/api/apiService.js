@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const SESSION_ID = '1209e015a0293cd99edb8a7024dcf0ba';
-const BASE_URL = 'https://api.panco.me/a/17';
+import { Platform } from 'react-native'; // <--- ایمپورت جدید برای دریافت سیستم عامل
+import { SESSION_ID, BASE_URL } from './config'; 
 
 export const syncChats = (syncType = 1) => {
   const url = `${BASE_URL}/sync?$=${SESSION_ID}`;
@@ -44,6 +43,23 @@ export const pinChats = (pinnedChatIds) => {
   const url = `${BASE_URL}/pin_chat?$=${SESSION_ID}`;
   const body = new FormData();
   body.append('chat_ids', JSON.stringify(pinnedChatIds));
+  return axios.post(url, body, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
+
+export const registerDevice = (fcmToken) => {
+  console.log(`[API Service] Registering device with FCM Token: ${fcmToken}`);
+  const url = `${BASE_URL}/register_device?$=${SESSION_ID}`;
+  
+  const body = new FormData();
+  // ===== اصلاحات کلیدی بر اساس کد اصلی پنکو =====
+  body.append('register_id', fcmToken);       // کلید صحیح
+  body.append('device_model', Platform.OS);     // پارامتر ضروری
+  body.append('version', '1.5.99');           // پارامتر ضروری (هاردکد شده)
+  body.append('bundle_version', '1.3.16');    // پارامتر ضروری (هاردکد شده)
+  // ===============================================
+
   return axios.post(url, body, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
