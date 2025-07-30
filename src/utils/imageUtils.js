@@ -4,16 +4,14 @@ const cdnServers = {
   "253": "https://fs3.panco.me/s/",
 };
 
-
 export const getImageUrl = (serverId, imagePath) => {
   if (!serverId || !imagePath) {
     return null;
   }
-
   const baseUrl = cdnServers[serverId];
   if (!baseUrl) {
+    console.warn(`[ImageUtils] Unknown server ID: ${serverId}`);
     return null;
   }
-
   return `${baseUrl}${imagePath}`;
 };

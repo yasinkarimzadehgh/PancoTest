@@ -1,4 +1,3 @@
-// src/components/ProfileHeader/ProfileHeader.styles.js
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 
@@ -10,19 +9,20 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.lightGray,
+    borderBottomColor: colors.border,
   },
   backButton: {
     padding: 10,
   },
   backButtonText: {
     fontSize: 24,
-    color: colors.text,
+    color: colors.textPrimary,
+    transform: [{ scaleX: -1 }],
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
+    color: colors.textPrimary,
     marginLeft: 15,
   },
 });

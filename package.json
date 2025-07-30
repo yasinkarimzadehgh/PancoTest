@@ -22,10 +22,9 @@
     "react-native": "0.80.1",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.13.1",
-    "react-redux": "^9.2.0",
-    "redux": "^5.0.1",
     "redux-saga": "^1.3.0",
-    "zustand": "^5.0.6"
+    "zustand": "^5.0.6",
+    "zustand-saga": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

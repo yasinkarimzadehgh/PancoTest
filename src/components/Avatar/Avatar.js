@@ -1,9 +1,7 @@
-// src/components/Avatar/Avatar.js
-
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { getAvatarStyles } from './Avatar.styles';
-import { generateColorFromName } from '../../utils/colorGenerator'; // ابزار جدید
+import { generateColorFromName } from '../../utils/colorGenerator';
 
 const Avatar = ({ imageUrl, name, size = 50 }) => {
   const styles = getAvatarStyles(size);
@@ -19,7 +17,6 @@ const Avatar = ({ imageUrl, name, size = 50 }) => {
     );
   }
 
-  // اگر تصویری وجود نداشت
   const firstLetter = name ? name.charAt(0).toUpperCase() : '?';
   const backgroundColor = generateColorFromName(name || '');
 
@@ -30,4 +27,4 @@ const Avatar = ({ imageUrl, name, size = 50 }) => {
   );
 };
 
-export default React.memo(Avatar); // بهینه‌سازی با React.memo
+export default React.memo(Avatar);

@@ -1,4 +1,3 @@
-// src/components/Header/Header.styles.js
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 
@@ -6,7 +5,7 @@ export default StyleSheet.create({
   headerContainer: {
     height: 60,
     backgroundColor: colors.background,
-    flexDirection: 'row-reverse', // <--- RTL: چینش از راست به چپ
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
@@ -14,18 +13,18 @@ export default StyleSheet.create({
     borderBottomColor: colors.border,
   },
   rightContainer: {
-    flexDirection: 'row-reverse', // <--- RTL
+    flexDirection: 'row-reverse',
     alignItems: 'center',
   },
   leftContainer: {
-    flexDirection: 'row-reverse', // <--- RTL
+    flexDirection: 'row-reverse',
     alignItems: 'center',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: colors.textPrimary,
-    marginLeft: 16, // <--- RTL: فاصله از آواتار
+    marginLeft: 16,
   },
   iconButton: {
     padding: 8,
@@ -39,6 +38,6 @@ export default StyleSheet.create({
     color: colors.textPrimary,
     fontSize: 16,
     fontWeight: '500',
-    marginLeft: 8, // <--- RTL: فاصله از ضربدر
+    marginLeft: 8,
   },
 });

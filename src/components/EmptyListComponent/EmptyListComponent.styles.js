@@ -1,5 +1,3 @@
-// src/components/EmptyListComponent/EmptyListComponent.styles.js
-
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 
@@ -9,16 +7,15 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    marginTop: 100, // فاصله از بالا
   },
   text: {
     fontSize: 18,
-    color: '#6B7280', // خاکستری
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   subText: {
     fontSize: 14,
-    color: '#9CA3AF',
+    color: colors.textSecondary,
     textAlign: 'center',
     marginTop: 8,
   },

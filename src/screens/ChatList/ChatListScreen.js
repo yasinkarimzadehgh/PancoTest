@@ -1,33 +1,27 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { View, Alert, FlatList, Text } from 'react-native';
-import { useDispatch } from 'react-redux';
 import Header from '../../components/Header/Header';
 import FloatingActionButton from '../../components/FloatingActionButton/FloatingActionButton';
 import ChatListItem from '../../components/ChatListItem/ChatListItem';
 import EmptyListComponent from '../../components/EmptyListComponent/EmptyListComponent';
 import useChatStore from '../../stores/chatStore';
-import { FETCH_CHATS, DELETE_CHATS, TOGGLE_PIN_CHAT } from '../../stores/chatSaga';
 import styles from './ChatListScreen.styles';
 
 const ChatListScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const chats = useChatStore((state) => state.chats);
-  const error = useChatStore((state) => state.error);
+  const { chats, error, fetchChats, deleteChats, togglePinChat } = useChatStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set());
 
   const sortedChats = useMemo(() => {
-    return [...chats].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+    return chats;
   }, [chats]);
-
+  
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
-    dispatch({ type: FETCH_CHATS, payload: { syncType: 2 } });
-    setTimeout(() => {
-        setIsRefreshing(false);
-    }, 1500);
-  }, [dispatch]);
+    fetchChats({ syncType: 2 });
+    setIsRefreshing(false);
+  }, [fetchChats]);
 
   const handleNewChatPress = () => Alert.alert('جدید', 'ایجاد چت جدید...');
 
@@ -40,7 +34,7 @@ const ChatListScreen = ({ navigation }) => {
     }
     setSelectedItems(newSelection);
   };
-
+  
   const handleItemPress = (item) => {
     if (selectionMode) {
       toggleSelection(item.id);
@@ -64,20 +58,20 @@ const ChatListScreen = ({ navigation }) => {
       [
         {
           text: item.pinned ? 'لغو پین' : 'پین کردن',
-          onPress: () => dispatch({ type: TOGGLE_PIN_CHAT, payload: { chatId: item.id } }),
+          onPress: () => togglePinChat({ chatId: item.id }),
         },
         {
           text: 'انتخاب',
           onPress: () => {
             setSelectionMode(true);
             setSelectedItems(new Set([item.id]));
-          },
+          }
         },
         { text: 'لغو', style: 'cancel' },
       ]
     );
   };
-
+  
   const handleDeleteSelected = () => {
     Alert.alert(
       `حذف ${selectedItems.size} چت`,
@@ -88,8 +82,7 @@ const ChatListScreen = ({ navigation }) => {
           text: 'حذف کن',
           style: 'destructive',
           onPress: () => {
-            const chatIdsToDelete = Array.from(selectedItems);
-            dispatch({ type: DELETE_CHATS, payload: { chatIds: chatIdsToDelete } });
+            deleteChats({ chatIds: Array.from(selectedItems) });
             setSelectionMode(false);
             setSelectedItems(new Set());
           },
@@ -116,7 +109,7 @@ const ChatListScreen = ({ navigation }) => {
         }}
         onConfirmDelete={handleDeleteSelected}
       />
-
+      
       <FlatList
         data={sortedChats}
         renderItem={({ item }) => (
@@ -128,7 +121,7 @@ const ChatListScreen = ({ navigation }) => {
             onLongPress={() => handleItemLongPress(item)}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         onRefresh={handleRefresh}
         refreshing={isRefreshing}
         ListEmptyComponent={
@@ -136,11 +129,10 @@ const ChatListScreen = ({ navigation }) => {
         }
         contentContainerStyle={{ flexGrow: 1 }}
         style={{ direction: 'rtl' }}
-        extraData={{ selectionMode, selectedItems }}
+        extraData={{selectionMode, selectedItems}}
       />
       {!selectionMode && <FloatingActionButton onPress={handleNewChatPress} />}
     </View>
   );
 };
-
 export default ChatListScreen;

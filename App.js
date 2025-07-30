@@ -1,40 +1,37 @@
-// App.js
 import React, { useEffect } from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
-import { Provider, useDispatch } from 'react-redux'; // <--- useDispatch را از react-redux ایمپورت می‌کنیم
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/AppNavigator';
-import store from './src/stores/store';
 import { colors } from './src/styles/colors';
-import styles from './App.styles';
 import { initWebSocket } from './src/api/websocketService';
-import { REGISTER_DEVICE_TOKEN } from './src/stores/notificationSaga';
+import useNotificationStore from './src/stores/notificationStore';
+import useChatStore from './src/stores/chatStore';
 
-const AppContent = () => {
-  const dispatch = useDispatch();
+const App = () => {
+  const { registerDevice } = useNotificationStore();
+  const { fetchChats } = useChatStore();
 
   useEffect(() => {
     initWebSocket();
-    // به محض بالا آمدن اپ، درخواست ثبت توکن را ارسال کن
-    dispatch({ type: REGISTER_DEVICE_TOKEN });
-  }, [dispatch]);
+    registerDevice();
+    fetchChats({ syncType: 1 });
+  }, [registerDevice, fetchChats]);
 
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
-  );
-}
-
-const App = () => {
-  return (
-    <Provider store={store}>
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
-        <AppContent />
-      </SafeAreaView>
-    </Provider>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+});
 
 export default App;

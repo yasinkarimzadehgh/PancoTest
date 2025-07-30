@@ -1,4 +1,3 @@
-// src/components/Header/Header.js
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Avatar from '../Avatar/Avatar';
@@ -15,7 +14,6 @@ const Header = (props) => {
     onConfirmDelete
   } = props;
 
-  // رندر هدر در حالت عادی
   const renderDefaultHeader = () => (
     <>
       <View style={styles.rightContainer}>
@@ -33,7 +31,6 @@ const Header = (props) => {
     </>
   );
 
-  // رندر هدر در حالت انتخاب
   const renderSelectionHeader = () => (
     <>
       <View style={styles.rightContainer}>

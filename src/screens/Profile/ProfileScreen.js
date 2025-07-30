@@ -1,12 +1,9 @@
-// src/screens/Profile/ProfileScreen.js
 import React, { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useDispatch } from 'react-redux';
 import ProfileHeader from '../../components/ProfileHeader/ProfileHeader';
-import Avatar from '../../components/Avatar/Avatar'; // استفاده از کامپوننت آواتار
+import Avatar from '../../components/Avatar/Avatar';
 import useProfileStore from '../../stores/profileStore';
-import { FETCH_PROFILE } from '../../stores/profileSaga';
-import { getImageUrl } from '../../utils/imageUtils'; // ایمپورت ابزار ساخت URL
+import { getImageUrl } from '../../utils/imageUtils';
 import styles from './ProfileScreen.styles';
 import { colors } from '../../styles/colors';
 
@@ -19,14 +16,13 @@ const InfoRow = ({ label, value }) => (
 
 const ProfileScreen = ({ route, navigation }) => {
   const { userId } = route.params;
-  const dispatch = useDispatch();
-  const { profile, isLoading, error } = useProfileStore();
+  const { profile, isLoading, error, fetchProfile } = useProfileStore();
 
   useEffect(() => {
     if (userId) {
-      dispatch({ type: FETCH_PROFILE, payload: { userId } });
+      fetchProfile({ userId });
     }
-  }, [userId, dispatch]);
+  }, [userId, fetchProfile]);
 
   if (isLoading) {
     return <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size="large" color={colors.primary} /></View>;
@@ -36,7 +32,6 @@ const ProfileScreen = ({ route, navigation }) => {
     return <View style={{flex: 1, justifyContent: 'center'}}><Text>خطا: {error}</Text></View>;
   }
   
-  // استفاده از ابزار جدید برای ساخت URL
   const avatarUrl = getImageUrl(profile.image_server_id, profile.image_path);
 
   return (

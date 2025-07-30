@@ -12,6 +12,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   errorText: {
-    color: 'red'
+    color: 'red',
   },
 });
