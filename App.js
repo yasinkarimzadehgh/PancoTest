@@ -9,6 +9,7 @@ import { initializeNetworkObserver } from './src/api/websocketService';
 import useNotificationStore from './src/stores/notificationStore';
 import useChatStore from './src/stores/chatStore';
 import useProfileStore from './src/stores/profileStore';
+import { setupNotificationHandlers } from './src/services/notificationHandler';
 
 const App = () => {
   const { registerDevice } = useNotificationStore();
@@ -16,10 +17,12 @@ const App = () => {
   const { fetchOwnProfile } = useProfileStore();
 
   useEffect(() => {
+    const unsubscribe = setupNotificationHandlers();
     initializeNetworkObserver();
     registerDevice();
     fetchChats({ syncType: 1 });
     fetchOwnProfile();
+    return unsubscribe;
   }, [registerDevice, fetchChats, fetchOwnProfile]);
 
   return (
