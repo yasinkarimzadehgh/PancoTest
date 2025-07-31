@@ -1,8 +1,10 @@
+import NetInfo from "@react-native-community/netinfo";
 import { KAFKA_WEBSOCKET_URL } from './config';
 import useChatStore from '../stores/chatStore';
 
 let ws = null;
 let pingTimeout = null;
+let isConnected = false;
 
 const sendPing = () => {
   if (ws && ws.readyState === WebSocket.OPEN) {
@@ -24,7 +26,13 @@ const onMessageReceived = (event) => {
   }
 };
 
-export const initWebSocket = () => {
+export const initWebSocket = async () => {
+  const netState = await NetInfo.fetch();
+  if (!netState.isConnected) {
+    console.log('[WebSocket] No internet connection. Skipping connection attempt.');
+    return;
+  }
+
   if (ws && ws.readyState === WebSocket.OPEN) return;
   
   if (ws) ws.close();
@@ -42,11 +50,10 @@ export const initWebSocket = () => {
   ws.onerror = (error) => {
     console.error('[WebSocket] Kafka connection error:', error.message);
   };
-
+  
   ws.onclose = () => {
     console.log('[WebSocket] Kafka connection closed.');
     if (pingTimeout) clearTimeout(pingTimeout);
-    setTimeout(initWebSocket, 5000);
   };
 };
 
@@ -56,4 +63,16 @@ export const disconnectWebSocket = () => {
     ws.close();
     ws = null;
   }
+};
+
+const handleConnectivityChange = (state) => {
+  if (state.isConnected && !isConnected) {
+    console.log('[NetInfo] Connection is back online. Attempting to connect WebSocket.');
+    initWebSocket();
+  }
+  isConnected = state.isConnected;
+};
+
+export const initializeNetworkObserver = () => {
+  NetInfo.addEventListener(handleConnectivityChange);
 };

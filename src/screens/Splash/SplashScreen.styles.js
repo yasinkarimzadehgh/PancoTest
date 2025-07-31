@@ -1,5 +1,3 @@
-// src/screens/Splash/SplashScreen.styles.js
-
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 
@@ -14,11 +12,11 @@ export default StyleSheet.create({
     width: 150,
     height: 150,
     marginBottom: 20,
-    tintColor: colors.primary, // برای رنگی کردن لوگوی موقت
+    tintColor: colors.primary,
   },
   loadingText: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.textPrimary,
     marginTop: 16,
   },
 });

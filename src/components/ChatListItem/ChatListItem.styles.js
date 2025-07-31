@@ -4,7 +4,7 @@ import { colors } from '../../styles/colors';
 export default StyleSheet.create({
   container: {
     width: '100%',
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     paddingVertical: 10,
     paddingHorizontal: 16,
     alignItems: 'center',
@@ -12,11 +12,11 @@ export default StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
   },
   avatarContainer: {
-    marginLeft: 15,
+    marginRight: 15,
   },
   onlineIndicator: {
     width: 14,
@@ -34,7 +34,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   topRow: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -42,39 +42,44 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.textPrimary,
-    textAlign: 'right',
+    textAlign: 'left',
   },
   time: {
     fontSize: 12,
     color: colors.textSecondary,
   },
   bottomRow: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 4,
   },
   messageGroup: {
     flex: 1,
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
   },
   statusIcon: {
     fontSize: 16,
     color: colors.accent,
-    marginLeft: 4,
+    marginRight: 4,
   },
   lastMessage: {
     fontSize: 14,
     color: colors.textSecondary,
-    textAlign: 'right',
+    textAlign: 'left',
     flexShrink: 1,
   },
   typingText: {
     fontSize: 14,
     color: colors.primary,
     fontWeight: '500',
-    textAlign: 'right',
+    textAlign: 'left',
+  },
+  badgeGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 8,
   },
   unreadBadge: {
     backgroundColor: colors.badge,
@@ -93,7 +98,7 @@ export default StyleSheet.create({
   pinIcon: {
     fontSize: 16,
     color: colors.textSecondary,
-    marginRight: 8,
+    marginLeft: 8,
   },
   checkboxContainer: {
     width: 24,
@@ -103,7 +108,7 @@ export default StyleSheet.create({
     borderColor: colors.textSecondary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 15,
+    marginLeft: 15,
   },
   checkboxSelected: {
     backgroundColor: colors.badge,

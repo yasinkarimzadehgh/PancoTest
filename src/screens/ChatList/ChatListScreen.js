@@ -1,22 +1,45 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Alert, FlatList, Text } from 'react-native';
+import withObservables from '@nozbe/with-observables';
+import { Q } from '@nozbe/watermelondb';
+import { map } from 'rxjs/operators';
+
 import Header from '../../components/Header/Header';
 import FloatingActionButton from '../../components/FloatingActionButton/FloatingActionButton';
 import ChatListItem from '../../components/ChatListItem/ChatListItem';
 import EmptyListComponent from '../../components/EmptyListComponent/EmptyListComponent';
 import useChatStore from '../../stores/chatStore';
 import styles from './ChatListScreen.styles';
+import { database } from '../../db';
+import { OWNER_USER_ID } from '../../api/config';
 
-const ChatListScreen = ({ navigation }) => {
-  const { chats, error, fetchChats, deleteChats, togglePinChat } = useChatStore();
+const formatChatTimestamp = (timestamp) => {
+  if (!timestamp) return '';
+
+  const messageDate = new Date(timestamp);
+  const now = new Date();
+
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  if (messageDate >= startOfToday) {
+    return messageDate.toLocaleTimeString('fa-IR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } else {
+    return messageDate.toLocaleDateString('fa-IR', {
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+};
+
+const ChatListScreen = ({ navigation, chats, owner }) => {
+  const { error, fetchChats, deleteChats, togglePinChat } = useChatStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set());
 
-  const sortedChats = useMemo(() => {
-    return chats;
-  }, [chats]);
-  
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
     fetchChats({ syncType: 2 });
@@ -57,8 +80,8 @@ const ChatListScreen = ({ navigation }) => {
       'چه کاری می‌خواهید انجام دهید؟',
       [
         {
-          text: item.pinned ? 'لغو پین' : 'پین کردن',
-          onPress: () => togglePinChat({ chatId: item.id }),
+          text: item.isPinned ? 'لغو پین' : 'پین کردن',
+          onPress: () => togglePinChat({ chatId: item.remoteId }),
         },
         {
           text: 'انتخاب',
@@ -82,7 +105,10 @@ const ChatListScreen = ({ navigation }) => {
           text: 'حذف کن',
           style: 'destructive',
           onPress: () => {
-            deleteChats({ chatIds: Array.from(selectedItems) });
+            const remoteIdsToDelete = chats
+              .filter(c => selectedItems.has(c.id))
+              .map(c => c.remoteId);
+            deleteChats({ chatIds: remoteIdsToDelete });
             setSelectionMode(false);
             setSelectedItems(new Set());
           },
@@ -95,12 +121,31 @@ const ChatListScreen = ({ navigation }) => {
     return ( <View style={styles.errorContainer}><Text style={styles.errorText}>خطا: {error}</Text></View> );
   }
 
+  const renderChatItem = ({ item }) => (
+    <ChatListItem
+      id={item.id}
+      name={item.name}
+      lastMessage={item.lastMessage}
+      time={formatChatTimestamp(item.lastMessageAt)}
+      unreadCount={item.unreadCount}
+      avatarUrl={item.avatarUrl}
+      pinned={item.isPinned}
+      selectionMode={selectionMode}
+      isSelected={selectedItems.has(item.id)}
+      onPress={() => handleItemPress(item)}
+      onLongPress={() => handleItemLongPress(item)}
+    />
+  );
+
   return (
     <View style={styles.container}>
       <Header
         title="گپ ها"
         selectionMode={selectionMode}
         selectedCount={selectedItems.size}
+        ownerName={owner?.name}
+        ownerAvatarUrl={owner?.avatarUrl}
+        onAvatarPress={() => owner && navigation.navigate('Profile', { userId: owner.remoteId })}
         onSearchPress={() => console.log('Search pressed')}
         onDeletePress={() => setSelectionMode(true)}
         onCancelSelection={() => {
@@ -111,16 +156,8 @@ const ChatListScreen = ({ navigation }) => {
       />
       
       <FlatList
-        data={sortedChats}
-        renderItem={({ item }) => (
-          <ChatListItem
-            {...item}
-            selectionMode={selectionMode}
-            isSelected={selectedItems.has(item.id)}
-            onPress={() => handleItemPress(item)}
-            onLongPress={() => handleItemLongPress(item)}
-          />
-        )}
+        data={chats}
+        renderItem={renderChatItem}
         keyExtractor={item => item.id}
         onRefresh={handleRefresh}
         refreshing={isRefreshing}
@@ -129,10 +166,23 @@ const ChatListScreen = ({ navigation }) => {
         }
         contentContainerStyle={{ flexGrow: 1 }}
         style={{ direction: 'rtl' }}
-        extraData={{selectionMode, selectedItems}}
+        extraData={{selectionMode, selectedItems, owner}}
       />
       {!selectionMode && <FloatingActionButton onPress={handleNewChatPress} />}
     </View>
   );
 };
-export default ChatListScreen;
+
+const enhance = withObservables([], () => ({
+  chats: database.get('chats').query(
+    Q.sortBy('is_pinned', Q.desc),
+    Q.sortBy('last_message_at', Q.desc)
+  ).observe(),
+  owner: database.get('users').query(Q.where('remote_id', OWNER_USER_ID))
+    .observe()
+    .pipe(
+      map(users => users[0])
+    ),
+}));
+
+export default enhance(ChatListScreen);

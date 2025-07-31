@@ -1,64 +1,129 @@
 import React, { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import withObservables from '@nozbe/with-observables';
+import { Q } from '@nozbe/watermelondb';
+import { map } from 'rxjs/operators';
+
 import ProfileHeader from '../../components/ProfileHeader/ProfileHeader';
 import Avatar from '../../components/Avatar/Avatar';
 import useProfileStore from '../../stores/profileStore';
-import { getImageUrl } from '../../utils/imageUtils';
 import styles from './ProfileScreen.styles';
 import { colors } from '../../styles/colors';
+import { database } from '../../db';
 
-const InfoRow = ({ label, value }) => (
-  <View style={styles.infoRow}>
-    <Text style={styles.infoLabel}>{label}</Text>
-    <Text style={styles.infoValue}>{value}</Text>
+const formatJoinDate = (timestamp) => {
+  if (!timestamp) return '';
+  const date = new Date(timestamp * 1000);
+  const formattedDate = new Intl.DateTimeFormat('fa-IR-u-nu-latn', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  }).format(date);
+  return `${formattedDate} عضو شده`;
+};
+
+const StatItem = ({ value, label }) => (
+  <View style={styles.statItem}>
+    <Text style={styles.statValue}>{value}</Text>
+    <Text style={styles.statLabel}>{label}</Text>
   </View>
 );
 
-const ProfileScreen = ({ route, navigation }) => {
+const ProfileScreen = ({ route, navigation, user }) => {
   const { userId } = route.params;
-  const { profile, isLoading, error, fetchProfile } = useProfileStore();
+  const { isLoading, error, fetchProfile } = useProfileStore();
 
   useEffect(() => {
     if (userId) {
       fetchProfile({ userId });
     }
   }, [userId, fetchProfile]);
-
-  if (isLoading) {
-    return <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size="large" color={colors.primary} /></View>;
-  }
-
-  if (error || !profile) {
-    return <View style={{flex: 1, justifyContent: 'center'}}><Text>خطا: {error}</Text></View>;
-  }
   
-  const avatarUrl = getImageUrl(profile.image_server_id, profile.image_path);
+  if (isLoading && !user) {
+    return <View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary} /></View>;
+  }
+
+  if (error && !user) {
+    return <View style={styles.loadingContainer}><Text>خطا: {error}</Text></View>;
+  }
+
+  if (!user) {
+    return <View style={styles.loadingContainer}><Text>در حال بارگذاری پروفایل...</Text></View>;
+  }
 
   return (
     <View style={styles.container}>
       <ProfileHeader title="پروفایل" onBackPress={() => navigation.goBack()} />
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.profileHeader}>
-          <Avatar name={profile.name} imageUrl={avatarUrl} size={100} />
-          <Text style={styles.name}>{profile.name || 'کاربر پنکو'}</Text>
-          <Text style={styles.username}>@{profile.user_name || '---'}</Text>
-        </View>
-
-        <View style={styles.infoSection}>
-          <InfoRow label="شماره موبایل" value={profile.phone_number || 'محفوظ'} />
-          <View style={styles.bioRow}>
-            <Text style={styles.infoLabel}>داستان</Text>
-            <Text style={styles.bioText}>
-              {profile.description || 'توضیحاتی ثبت نشده است.'}
-            </Text>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        
+        <View style={styles.mainCard}>
+          <View style={styles.mainInfoSection}>
+            <Avatar name={user.name} imageUrl={user.avatarUrl} size={60} />
+            <View style={styles.nameAndDateSection}>
+              <View style={styles.nameRow}>
+                 <Text style={styles.name}>{user.name || 'کاربر پنکو'}</Text>
+                 <View style={styles.ratingBadge}>
+                    <Text style={styles.ratingText}>۸.۶۵</Text>
+                 </View>
+              </View>
+              <Text style={styles.joinDate}>{formatJoinDate(user.createdAt.getTime() / 1000)}</Text>
+            </View>
           </View>
-          <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>ویرایش پروفایل</Text>
+          
+          <View style={styles.statsRow}>
+            <StatItem value={user.followers || 0} label="دنبال کننده" />
+            <StatItem value={user.following || 0} label="دنبال می‌کنی" />
+          </View>
+
+          <TouchableOpacity style={styles.editProfileButton}>
+            <Text style={styles.editProfileButtonText}>ویرایش پروفایل</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.infoCard}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>شماره موبایل:</Text>
+            <Text style={styles.infoValue}>{user.phoneNumber || '+۹۸۹۱۲۳۴۵۶۷۸۹'}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>نام کاربری:</Text>
+            <Text style={styles.infoValue}>@{user.userName || '---'}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>کد معرف:</Text>
+            <View style={styles.referralContainer}>
+              <TouchableOpacity>
+                <Text style={styles.shareIcon}>🔗</Text>
+              </TouchableOpacity>
+              <Text style={styles.infoValue}>{user.remoteId}</Text>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.actionButton}>
+          <Text style={styles.actionButtonText}>کلکسیون‌های تموم شده</Text>
+        </TouchableOpacity>
+
+        <View style={styles.infoCard}>
+          <Text style={styles.infoLabel}>داستان:</Text>
+          <Text style={styles.bioText}>{user.description || 'توضیحاتی ثبت نشده است.'}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.actionButton}>
+          <Text style={styles.actionButtonText}>تنظیمات پنکو</Text>
+        </TouchableOpacity>
+
       </ScrollView>
     </View>
   );
 };
 
-export default ProfileScreen;
+const enhance = withObservables(['route'], ({ route }) => ({
+  user: database.get('users').query(Q.where('remote_id', route.params.userId))
+    .observe()
+    .pipe(
+      map(users => users[0])
+    ),
+}));
+
+export default enhance(ProfileScreen);

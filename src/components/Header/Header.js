@@ -8,6 +8,9 @@ const Header = (props) => {
     title,
     selectionMode,
     selectedCount,
+    ownerName,
+    ownerAvatarUrl,
+    onAvatarPress,
     onSearchPress,
     onDeletePress,
     onCancelSelection,
@@ -17,7 +20,9 @@ const Header = (props) => {
   const renderDefaultHeader = () => (
     <>
       <View style={styles.rightContainer}>
-        <Avatar name="Me" size={36} />
+        <TouchableOpacity onPress={onAvatarPress}>
+          <Avatar name={ownerName || '?'} imageUrl={ownerAvatarUrl} size={36} />
+        </TouchableOpacity>
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.leftContainer}>
@@ -42,7 +47,7 @@ const Header = (props) => {
              <Text style={styles.deleteButtonText}>حذف {selectedCount} چت</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.iconButton} onPress={onCancelSelection}>
+         <TouchableOpacity style={styles.iconButton} onPress={onCancelSelection}>
           <Text style={styles.iconText}>✕</Text>
         </TouchableOpacity>
       </View>

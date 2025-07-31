@@ -25,15 +25,13 @@ const Checkbox = ({ isSelected }) => (
 const ChatListItem = (props) => {
   const { name, lastMessage, time, unreadCount, avatarUrl, isOnline, isTyping, status, pinned,
           onPress, onLongPress, selectionMode, isSelected } = props;
-
+          
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
       onLongPress={onLongPress}
     >
-      {selectionMode && <Checkbox isSelected={isSelected} />}
-
       <View style={styles.contentWrapper}>
         <View style={styles.avatarContainer}>
           <Avatar name={name} imageUrl={avatarUrl} size={55} />
@@ -58,7 +56,7 @@ const ChatListItem = (props) => {
               )}
             </View>
 
-            <View style={{flexDirection: 'row-reverse', alignItems: 'center'}}>
+            <View style={styles.badgeGroup}>
               {pinned && <Text style={styles.pinIcon}>📌</Text>}
               {unreadCount > 0 && (
                 <View style={styles.unreadBadge}>
@@ -69,6 +67,7 @@ const ChatListItem = (props) => {
           </View>
         </View>
       </View>
+      {selectionMode && <Checkbox isSelected={isSelected} />}
     </TouchableOpacity>
   );
 };

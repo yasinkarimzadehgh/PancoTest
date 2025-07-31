@@ -1,29 +1,36 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { DatabaseProvider } from '@nozbe/watermelondb/react';
+import { database } from './src/db';
 import AppNavigator from './src/navigation/AppNavigator';
 import { colors } from './src/styles/colors';
-import { initWebSocket } from './src/api/websocketService';
+import { initializeNetworkObserver } from './src/api/websocketService';
 import useNotificationStore from './src/stores/notificationStore';
 import useChatStore from './src/stores/chatStore';
+import useProfileStore from './src/stores/profileStore';
 
 const App = () => {
   const { registerDevice } = useNotificationStore();
   const { fetchChats } = useChatStore();
+  const { fetchOwnProfile } = useProfileStore();
 
   useEffect(() => {
-    initWebSocket();
+    initializeNetworkObserver();
     registerDevice();
     fetchChats({ syncType: 1 });
-  }, [registerDevice, fetchChats]);
+    fetchOwnProfile();
+  }, [registerDevice, fetchChats, fetchOwnProfile]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </SafeAreaView>
+    <DatabaseProvider database={database}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </SafeAreaView>
+    </DatabaseProvider>
   );
 };
 
