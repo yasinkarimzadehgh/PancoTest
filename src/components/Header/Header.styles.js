@@ -30,6 +30,11 @@ export default StyleSheet.create({
     padding: 8,
     marginHorizontal: 4,
   },
+  iconImage: {
+    width: 24,
+    height: 24,
+    tintColor: colors.textSecondary,
+  },
   iconText: {
     fontSize: 24,
     color: colors.textSecondary,

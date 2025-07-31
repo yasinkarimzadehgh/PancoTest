@@ -12,6 +12,7 @@ import useChatStore from '../../stores/chatStore';
 import styles from './ChatListScreen.styles';
 import { database } from '../../db';
 import { OWNER_USER_ID } from '../../api/config';
+import images_map from '../../assets/images/images_map';
 
 const formatChatTimestamp = (timestamp) => {
   if (!timestamp) return '';
@@ -34,11 +35,14 @@ const formatChatTimestamp = (timestamp) => {
   }
 };
 
+const ChatDivider = () => <View style={styles.divider} />;
+
 const ChatListScreen = ({ navigation, chats, owner }) => {
   const { error, fetchChats, deleteChats, togglePinChat } = useChatStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set());
+  const [revealedChatItemId, setRevealedChatItemId] = useState(null);
 
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
@@ -59,6 +63,10 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
   };
   
   const handleItemPress = (item) => {
+    if (revealedChatItemId) {
+      setRevealedChatItemId(null);
+      return;
+    }
     if (selectionMode) {
       toggleSelection(item.id);
     } else {
@@ -71,28 +79,8 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
   };
 
   const handleItemLongPress = (item) => {
-    if (selectionMode) {
-      toggleSelection(item.id);
-      return;
-    }
-    Alert.alert(
-      item.name,
-      'چه کاری می‌خواهید انجام دهید؟',
-      [
-        {
-          text: item.isPinned ? 'لغو پین' : 'پین کردن',
-          onPress: () => togglePinChat({ chatId: item.remoteId }),
-        },
-        {
-          text: 'انتخاب',
-          onPress: () => {
-            setSelectionMode(true);
-            setSelectedItems(new Set([item.id]));
-          }
-        },
-        { text: 'لغو', style: 'cancel' },
-      ]
-    );
+    if (selectionMode) return;
+    setRevealedChatItemId(prevId => prevId === item.id ? null : item.id);
   };
   
   const handleDeleteSelected = () => {
@@ -117,25 +105,59 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
     );
   };
 
+  const handleSingleDelete = (item) => {
+    Alert.alert(
+      `حذف چت با ${item.name}`,
+      'آیا مطمئن هستید؟ این عمل غیرقابل بازگشت است.',
+      [
+        { text: 'لغو', style: 'cancel' },
+        {
+          text: 'حذف کن',
+          style: 'destructive',
+          onPress: () => {
+            setRevealedChatItemId(null);
+            deleteChats({ chatIds: [item.remoteId] });
+          },
+        },
+      ]
+    );
+  };
+
   if (error) {
     return ( <View style={styles.errorContainer}><Text style={styles.errorText}>خطا: {error}</Text></View> );
   }
 
-  const renderChatItem = ({ item }) => (
-    <ChatListItem
-      id={item.id}
-      name={item.name}
-      lastMessage={item.lastMessage}
-      time={formatChatTimestamp(item.lastMessageAt)}
-      unreadCount={item.unreadCount}
-      avatarUrl={item.avatarUrl}
-      pinned={item.isPinned}
-      selectionMode={selectionMode}
-      isSelected={selectedItems.has(item.id)}
-      onPress={() => handleItemPress(item)}
-      onLongPress={() => handleItemLongPress(item)}
-    />
-  );
+  const renderChatItem = ({ item }) => {
+    const isRevealed = revealedChatItemId === item.id;
+    const actions = [
+      {
+        label: item.isPinned ? 'آن‌پین' : 'پین',
+        icon: item.isPinned ? images_map.unpin : images_map.pin,
+        onPress: () => {
+          togglePinChat({ chatId: item.remoteId });
+          setRevealedChatItemId(null);
+        },
+      },
+      { label: 'حذف', icon: images_map.delete, onPress: () => handleSingleDelete(item) },
+    ];
+
+    return (
+      <ChatListItem
+        name={item.name}
+        lastMessage={item.lastMessage}
+        avatarUrl={item.avatarUrl}
+        unreadCount={item.unreadCount}
+        pinned={item.isPinned}
+        time={formatChatTimestamp(item.lastMessageAt)}
+        selectionMode={selectionMode}
+        isSelected={selectedItems.has(item.id)}
+        onPress={() => handleItemPress(item)}
+        onLongPress={() => handleItemLongPress(item)}
+        isRevealed={isRevealed}
+        actions={actions}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -146,7 +168,6 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
         ownerName={owner?.name}
         ownerAvatarUrl={owner?.avatarUrl}
         onAvatarPress={() => owner && navigation.navigate('Profile', { userId: owner.remoteId })}
-        onSearchPress={() => console.log('Search pressed')}
         onDeletePress={() => setSelectionMode(true)}
         onCancelSelection={() => {
           setSelectionMode(false);
@@ -161,13 +182,14 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
         keyExtractor={item => item.id}
         onRefresh={handleRefresh}
         refreshing={isRefreshing}
+        ItemSeparatorComponent={ChatDivider}
         ListEmptyComponent={
           !isRefreshing && <EmptyListComponent title="شما هنوز گپی ندارید!" />
         }
         contentContainerStyle={{ flexGrow: 1 }}
-        style={{ direction: 'rtl' }}
-        extraData={{selectionMode, selectedItems, owner}}
+        extraData={{selectionMode, selectedItems, owner, revealedChatItemId}}
       />
+      
       {!selectionMode && <FloatingActionButton onPress={handleNewChatPress} />}
     </View>
   );

@@ -6,13 +6,13 @@ export const getAvatarStyles = (size) => {
     avatarImage: {
       width: size,
       height: size,
-      borderRadius: size / 2,
+      borderRadius: 24,
       backgroundColor: colors.lightGray,
     },
     avatarContainer: {
       width: size,
       height: size,
-      borderRadius: size / 2,
+      borderRadius: 24,
       justifyContent: 'center',
       alignItems: 'center',
     },

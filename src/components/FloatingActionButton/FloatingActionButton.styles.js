@@ -25,8 +25,9 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
-  fabIcon: {
-    fontSize: 24,
-    color: colors.white,
+  fabIconImage: {
+    width: 20,
+    height: 20,
+    tintColor: colors.white,
   },
 });

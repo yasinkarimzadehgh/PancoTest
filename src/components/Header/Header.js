@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Avatar from '../Avatar/Avatar';
 import styles from './Header.styles';
+import images_map from '../../assets/images/images_map';
 
 const Header = (props) => {
   const {
@@ -11,7 +12,6 @@ const Header = (props) => {
     ownerName,
     ownerAvatarUrl,
     onAvatarPress,
-    onSearchPress,
     onDeletePress,
     onCancelSelection,
     onConfirmDelete
@@ -26,11 +26,8 @@ const Header = (props) => {
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.leftContainer}>
-        <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
-          <Text style={styles.iconText}>🔍</Text> 
-        </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton} onPress={onDeletePress}>
-         <Text style={styles.iconText}>🗑️</Text>
+         <Image source={images_map.delete} style={styles.iconImage} />
         </TouchableOpacity>
       </View>
     </>
@@ -48,7 +45,7 @@ const Header = (props) => {
           </TouchableOpacity>
         )}
          <TouchableOpacity style={styles.iconButton} onPress={onCancelSelection}>
-          <Text style={styles.iconText}>✕</Text>
+          <Image source={images_map.close} style={styles.iconImage} />
         </TouchableOpacity>
       </View>
     </>

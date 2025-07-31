@@ -14,4 +14,8 @@ export default StyleSheet.create({
   errorText: {
     color: 'red',
   },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+  },
 });

@@ -28,7 +28,7 @@ async function updateChatsInDatabase(updates, pinnedChatIds) {
 
     const mappedData = {
       remoteId: key,
-      name: chatInfo?.chat_name || 'چت ناشناس',
+      name: chatInfo?.chat_name === 'myself' ? 'پیام‌های ذخیره شده' : (chatInfo?.chat_name || 'چت ناشناس'),
       lastMessage: lastMessageItem?.body || '...',
       lastMessageAt: lastMessageItem ? new Date(lastMessageItem.date * 1000) : new Date(),
       unreadCount: chatInfo?.unread_messages || 0,
@@ -137,7 +137,6 @@ function* pinChatSaga(action) {
         Alert.alert('خطا', `عملیات پین کردن ناموفق بود: ${error.message}`);
     }
 }
-
 
 function* handleWebSocketMessage() {
   yield call(fetchChatsSaga, { payload: { syncType: 2 } });
