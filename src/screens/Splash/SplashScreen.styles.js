@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
+import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   container: {
@@ -15,8 +16,7 @@ export default StyleSheet.create({
     tintColor: colors.primary,
   },
   loadingText: {
-    fontSize: 16,
-    color: colors.textPrimary,
+    ...textStyles.body,
     marginTop: 16,
   },
 });

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
+import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   headerContainer: {
@@ -22,19 +23,18 @@ export default StyleSheet.create({
   rightContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
+    gap:6,
   },
   leftContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
-    marginRight: 16,
+    ...textStyles.title,
+    marginLeft: 16,
   },
   iconButton: {
-    marginRight: 5
+    marginRight:5
   },
   iconImage: {
     width: 24,
@@ -42,12 +42,11 @@ export default StyleSheet.create({
     tintColor: colors.textSecondary,
   },
   deleteButtonText: {
-    color: colors.white,
+    ...textStyles.button,
     backgroundColor: colors.primary,
     fontSize: 15,
-    fontWeight: 'bold',
     paddingHorizontal: 14,
-    paddingVertical: 5,
+    paddingVertical: 7,
     borderRadius: 12,
     overflow: 'hidden',
   },

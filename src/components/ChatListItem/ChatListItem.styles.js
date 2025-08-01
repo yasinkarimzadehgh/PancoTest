@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
+import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   container: {
@@ -55,10 +56,7 @@ export default StyleSheet.create({
     marginTop: 4,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    textAlign: 'right',
+    ...textStyles.bodyBold,
   },
   timeAndPinContainer: {
     flexDirection: 'row',
@@ -71,8 +69,7 @@ export default StyleSheet.create({
     marginRight: 6,
   },
   time: {
-    fontSize: 12,
-    color: colors.textSecondary,
+    ...textStyles.caption,
   },
   messageGroup: {
     flex: 1,
@@ -84,8 +81,8 @@ export default StyleSheet.create({
     marginRight: 4,
   },
   lastMessage: {
+    ...textStyles.caption,
     fontSize: 14,
-    color: colors.textSecondary,
     textAlign: 'right',
   },
   typingText: {
@@ -102,9 +99,8 @@ export default StyleSheet.create({
     paddingHorizontal: 6,
   },
   unreadText: {
-    color: colors.white,
+    ...textStyles.button,
     fontSize: 11,
-    fontWeight: 'bold',
   },
   selectionIcon: {
     width: 24,
@@ -133,10 +129,9 @@ export default StyleSheet.create({
     height: 20,
   },
   actionLabel: {
-    color: colors.white,
-    fontSize: 10,
-    fontWeight: 'bold',
+    ...textStyles.button,
     backgroundColor: colors.primary,
+    fontSize: 10,
     borderRadius: 6,
     paddingHorizontal: 6,
     paddingVertical: 1,

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
+import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   fab: {
@@ -20,9 +21,7 @@ export default StyleSheet.create({
     shadowRadius: 4,
   },
   fabText: {
-    fontSize: 16,
-    color: colors.white,
-    fontWeight: 'bold',
+    ...textStyles.button,
     marginLeft: 8,
   },
   fabIconImage: {

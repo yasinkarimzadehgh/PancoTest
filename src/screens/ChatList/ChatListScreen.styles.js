@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
+import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   container: {
@@ -12,6 +13,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   errorText: {
+    ...textStyles.body,
     color: 'red',
   },
   divider: {

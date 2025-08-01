@@ -1,0 +1,49 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/iran-sans-bold.ttf",
+      "sha1": "4b470c0c512436bd1b727fbb97edb7e3709d47db"
+    },
+    {
+      "path": "src/assets/fonts/iran-sans-extra-bold.ttf",
+      "sha1": "08039e75f2f52ebaf05d13356c372e3604edfb8f"
+    },
+    {
+      "path": "src/assets/fonts/iran-sans-medium.ttf",
+      "sha1": "cb81869401ab84bfdefef3533b9ed1e536b682b5"
+    },
+    {
+      "path": "src/assets/fonts/iran-sans-r.ttf",
+      "sha1": "13fe7ffd0d11ff4ada46373597a8cd04e3aae864"
+    },
+    {
+      "path": "src/assets/fonts/iran-sans-regular.ttf",
+      "sha1": "54f354bea2f9c3cddcfac99fe77240fca52d9f88"
+    },
+    {
+      "path": "src/assets/fonts/IRANSansXFaNum-Bold.ttf",
+      "sha1": "4b470c0c512436bd1b727fbb97edb7e3709d47db"
+    },
+    {
+      "path": "src/assets/fonts/IRANSansXFaNum-ExtraBold.ttf",
+      "sha1": "08039e75f2f52ebaf05d13356c372e3604edfb8f"
+    },
+    {
+      "path": "src/assets/fonts/IRANSansXFaNum-Medium.ttf",
+      "sha1": "cb81869401ab84bfdefef3533b9ed1e536b682b5"
+    },
+    {
+      "path": "src/assets/fonts/IRANSansXFaNum-Regular.ttf",
+      "sha1": "54f354bea2f9c3cddcfac99fe77240fca52d9f88"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-B.ttf",
+      "sha1": "e9a9bb713e6006858063a45bfa7f854c80485112"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-R.ttf",
+      "sha1": "617d6a6120d1e584a9212598421d039cb9b2e7c9"
+    }
+  ]
+}

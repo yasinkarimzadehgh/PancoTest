@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
+import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   container: {
@@ -34,13 +35,11 @@ export default StyleSheet.create({
     alignItems: 'flex-end',
   },
   name: {
+    ...textStyles.title,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
   },
   lastActive: {
-    fontSize: 12,
-    color: colors.textSecondary,
+    ...textStyles.caption,
     marginTop: 4,
   },
   statsRow: {
@@ -60,8 +59,7 @@ export default StyleSheet.create({
     marginLeft: 5,
   },
   statText: {
-    fontSize: 12,
-    color: colors.textSecondary,
+    ...textStyles.caption,
   },
   followSection: {
     flexDirection: 'row-reverse',
@@ -77,13 +75,10 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   followStatValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.textPrimary,
+    ...textStyles.bodyBold,
   },
   followStatLabel: {
-    fontSize: 12,
-    color: colors.textSecondary,
+    ...textStyles.caption,
   },
   verticalDivider: {
     width: 1,
@@ -100,9 +95,7 @@ export default StyleSheet.create({
     marginRight: 24,
   },
   actionButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    ...textStyles.button,
   },
   detailsSection: {
     paddingTop: 16,
@@ -116,12 +109,11 @@ export default StyleSheet.create({
     paddingVertical: 16,
   },
   detailLabel: {
+    ...textStyles.caption,
     fontSize: 14,
-    color: colors.textSecondary,
   },
   detailValue: {
+    ...textStyles.bodyBold,
     fontSize: 14,
-    color: colors.textPrimary,
-    fontWeight: 'bold',
   },
 });
