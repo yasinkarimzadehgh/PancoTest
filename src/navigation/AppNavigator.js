@@ -11,7 +11,12 @@ const AppNavigator = () => {
   const isLoading = useChatStore((state) => state.isLoading);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+      }}
+    >
       {isLoading ? (
         <Stack.Screen name="Splash" component={SplashScreen} />
       ) : (
