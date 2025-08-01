@@ -1,7 +1,6 @@
 import { Platform } from 'react-native';
 import { Database } from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
-
 import { mySchema } from './schema';
 import { migrations } from './migrations';
 import Chat from './models/Chat';

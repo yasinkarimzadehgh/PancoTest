@@ -1,28 +1,54 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { getAvatarStyles } from './Avatar.styles';
-import { generateColorFromName } from '../../utils/colorGenerator';
+import { colors } from '../../styles/colors';
+import images_map from '../../assets/images/images_map';
 
 const Avatar = ({ imageUrl, name, size = 50 }) => {
   const styles = getAvatarStyles(size);
-  const hasImage = imageUrl && imageUrl.trim().length > 0;
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  if (hasImage) {
+  const showImage = imageUrl && imageUrl.trim().length > 0 && !hasError;
+
+  const handleLoadStart = () => setIsLoading(true);
+  const handleLoadEnd = () => setIsLoading(false);
+  const handleError = () => {
+    setIsLoading(false);
+    setHasError(true);
+  };
+
+  if (showImage) {
     return (
-      <Image 
-        source={{ uri: imageUrl }} 
-        style={styles.avatarImage} 
-        resizeMode="cover" 
-      />
+      <View style={styles.container}>
+        <FastImage
+          style={styles.avatarImage}
+          source={{
+            uri: imageUrl,
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+          onLoadStart={handleLoadStart}
+          onLoadEnd={handleLoadEnd}
+          onError={handleError}
+        />
+        {isLoading && (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="small" color={colors.primary} />
+          </View>
+        )}
+      </View>
     );
   }
 
-  const firstLetter = name ? name.charAt(0).toUpperCase() : '?';
-  const backgroundColor = generateColorFromName(name || '');
-
   return (
-    <View style={[styles.avatarContainer, { backgroundColor }]}>
-      <Text style={styles.avatarText}>{firstLetter}</Text>
+    <View style={styles.container}>
+      <FastImage
+        style={styles.avatarImage}
+        source={images_map.user}
+        resizeMode={FastImage.resizeMode.cover}
+      />
     </View>
   );
 };

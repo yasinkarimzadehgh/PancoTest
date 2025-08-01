@@ -4,6 +4,7 @@ import Avatar from '../Avatar/Avatar';
 import styles from './ChatListItem.styles';
 import images_map from '../../assets/images/images_map';
 import { colors } from '../../styles/colors';
+import { t } from '../../utils/localizationUtils';
 
 const MessageStatus = ({ status }) => {
   if (!status || status === 'sending') return null;
@@ -69,7 +70,7 @@ const ChatListItem = (props) => {
             <View style={styles.messageGroup}>
               <MessageStatus status={status} />
               {isTyping ? (
-                <Text style={[styles.lastMessage, styles.typingText]} numberOfLines={1}>در حال نوشتن...</Text>
+                <Text style={[styles.lastMessage, styles.typingText]} numberOfLines={1}>{t('chat.typing')}</Text>
               ) : (
                 <Text style={styles.lastMessage} numberOfLines={1}>{lastMessage}</Text>
               )}

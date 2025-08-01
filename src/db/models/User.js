@@ -10,8 +10,6 @@ export default class User extends Model {
   @text('phone_number') phoneNumber;
   @text('description') description;
   @text('avatar_url') avatarUrl;
-  @field('followers') followers;
-  @field('following') following;
 
   @text('last_active_time') lastActiveTime;
   @field('views') views;

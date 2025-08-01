@@ -6,23 +6,26 @@ import { database } from './src/db';
 import AppNavigator from './src/navigation/AppNavigator';
 import { colors } from './src/styles/colors';
 import { initializeNetworkObserver } from './src/api/websocketService';
-import useNotificationStore from './src/stores/notificationStore';
-import useChatStore from './src/stores/chatStore';
-import useProfileStore from './src/stores/profileStore';
+import useNotificationStore from './src/stores/notification';
+import useChatStore from './src/stores/chat';
+import useUserStore from './src/stores/user';
 import { setupNotificationHandlers } from './src/services/notificationHandler';
 
 const App = () => {
   const { registerDevice } = useNotificationStore();
   const { fetchChats } = useChatStore();
-  const { fetchOwnProfile } = useProfileStore();
+  const { fetchOwnProfile } = useUserStore();
 
   useEffect(() => {
     const unsubscribe = setupNotificationHandlers();
     initializeNetworkObserver();
     registerDevice();
-    fetchChats({ syncType: 1 });
     fetchOwnProfile();
-    return unsubscribe;
+    fetchChats({ syncType: 1 });
+
+    return () => {
+      unsubscribe();
+    };
   }, [registerDevice, fetchChats, fetchOwnProfile]);
 
   return (
@@ -38,10 +41,7 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
+  container: { flex: 1, backgroundColor: colors.background }
 });
 
 export default App;

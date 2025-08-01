@@ -12,6 +12,13 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  selectionHeaderContainer: {
+    flex: 1,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+  },
   rightContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -24,25 +31,24 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: colors.textPrimary,
-    marginLeft: 16,
+    marginRight: 16,
   },
   iconButton: {
-    padding: 8,
-    marginHorizontal: 4,
+    marginRight: 5
   },
   iconImage: {
     width: 24,
     height: 24,
     tintColor: colors.textSecondary,
   },
-  iconText: {
-    fontSize: 24,
-    color: colors.textSecondary,
-  },
   deleteButtonText: {
-    color: colors.textPrimary,
-    fontSize: 16,
-    fontWeight: '500',
-    marginLeft: 8,
+    color: colors.white,
+    backgroundColor: colors.primary,
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });

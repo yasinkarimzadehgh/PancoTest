@@ -92,7 +92,7 @@ export default StyleSheet.create({
     marginHorizontal: 16,
   },
   profileActionButton: {
-    flex: 1, 
+    flex: 1,
     paddingVertical: 7,
     borderRadius: 12,
     alignItems: 'center',

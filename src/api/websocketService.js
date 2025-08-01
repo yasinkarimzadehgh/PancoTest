@@ -1,6 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 import { KAFKA_WEBSOCKET_URL } from './config';
-import useChatStore from '../stores/chatStore';
+import useChatStore from '../stores/chat';
 
 let ws = null;
 let pingTimeout = null;
@@ -34,7 +34,7 @@ export const initWebSocket = async () => {
   }
 
   if (ws && ws.readyState === WebSocket.OPEN) return;
-  
+ 
   if (ws) ws.close();
   if (pingTimeout) clearTimeout(pingTimeout);
 
@@ -50,7 +50,7 @@ export const initWebSocket = async () => {
   ws.onerror = (error) => {
     console.error('[WebSocket] Kafka connection error:', error.message);
   };
-  
+ 
   ws.onclose = () => {
     console.log('[WebSocket] Kafka connection closed.');
     if (pingTimeout) clearTimeout(pingTimeout);

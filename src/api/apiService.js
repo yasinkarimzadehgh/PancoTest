@@ -10,10 +10,8 @@ export const syncChats = async (syncType = 1) => {
     const response = await axios.post(url, body, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('[API LOG] Sync Chats Response:', JSON.stringify(response.data, null, 2));
     return response;
   } catch (error) {
-    console.error('[API LOG] Error in syncChats:', error.message);
     throw error;
   }
 };
@@ -26,10 +24,8 @@ export const syncAcknowledge = async (updateMessageId) => {
     const response = await axios.post(url, body, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('[API LOG] Sync Acknowledge Response:', JSON.stringify(response.data, null, 2));
     return response;
   } catch (error) {
-    console.error('[API LOG] Error in syncAcknowledge:', error.message);
     throw error;
   }
 };
@@ -42,10 +38,8 @@ export const getProfileInfo = async (userId) => {
         const response = await axios.post(url, body, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
-        console.log('[API LOG] Profile Info Response:', JSON.stringify(response.data, null, 2));
         return response;
     } catch (error) {
-        console.error('[API LOG] Error fetching profile info:', error.message);
         throw error;
     }
 };
@@ -59,10 +53,8 @@ export const clearHistory = async (chatIds) => {
     const response = await axios.post(url, body, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('[API LOG] Clear History Response:', JSON.stringify(response.data, null, 2));
     return response;
   } catch (error) {
-    console.error('[API LOG] Error in clearHistory:', error.message);
     throw error;
   }
 };
@@ -75,10 +67,8 @@ export const pinChats = async (pinnedChatIds) => {
     const response = await axios.post(url, body, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('[API LOG] Pin Chats Response:', JSON.stringify(response.data, null, 2));
     return response;
   } catch (error) {
-    console.error('[API LOG] Error in pinChats:', error.message);
     throw error;
   }
 };
@@ -94,7 +84,6 @@ export const registerDevice = async (fcmToken) => {
     const response = await axios.post(url, body, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('[API LOG] Register Device Response:', JSON.stringify(response.data, null, 2));
     return response;
   } catch (error) {
     console.error('[API LOG] Error in registerDevice:', error.message);

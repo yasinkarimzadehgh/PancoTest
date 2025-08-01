@@ -1,3 +1,64 @@
 {
-	"PANCO": "پنکو"
+  "PANCO": "پنکو",
+  "common": {
+    "unknownDate": "تاریخ نامشخص",
+    "error": "خطا",
+    "errorPrefix": "خطا: {error}",
+    "cancel": "لغو",
+    "delete": "حذف",
+    "ok": "باشه",
+    "info": "اطلاعات",
+    "serverError": "خطای سرور"
+  },
+  "splash": {
+    "loading": "در حال بارگذاری اطلاعات..."
+  },
+  "chat": {
+    "typing": "در حال نوشتن...",
+    "savedMessages": "پیام‌های ذخیره شده",
+    "unknownChat": "چت ناشناس",
+    "pinFailed": "عملیات پین کردن ناموفق بود"
+  },
+  "fab": {
+    "new": "جدید"
+  },
+  "header": {
+    "deleteCount": "حذف {count} چت"
+  },
+  "profile": {
+    "title": "پروفایل",
+    "loading": "در حال بارگذاری پروفایل...",
+    "defaultName": "کاربر پنکو",
+    "notFound": "کاربر یافت نشد",
+    "recentlyActive": "همین چند دقیقه پیش",
+    "editProfile": "ویرایش پروفایل",
+    "isFollowing": "دنبال می‌کنی",
+    "follow": "دنبال کردن",
+    "memberSince": "{date} عضو شده",
+    "views": "{count} دیده شده",
+    "likes": "{count} لایک شده",
+    "followers": "دنبال کننده",
+    "followingCount": "دنبال شونده",
+    "usernameLabel": "نام کاربری:",
+    "refCodeLabel": "کد معرف:"
+  },
+  "chatList": {
+    "title": "گپ ها",
+    "newChatAlert": "ایجاد چت جدید...",
+    "noProfile": "این چت پروفایل کاربری قابل نمایش ندارد.",
+    "deleteCountTitle": "حذف {count} چت",
+    "deleteSingleTitle": "حذف چت با {name}",
+    "deleteConfirmMessage": "آیا مطمئن هستید؟ این عمل غیرقابل بازگشت است.",
+    "confirmDelete": "حذف کن",
+    "emptyMessage": "شما هنوز گپی ندارید!",
+    "pin": "پین",
+    "unpin": "آن‌پین"
+  },
+  "notification": {
+    "permissionTitle": "نیازمند دسترسی",
+    "permissionMessage": "برای دریافت اعلان‌ها، لطفاً دسترسی نوتیفیکیشن را از تنظیمات دستگاه فعال کنید.",
+    "newMessageTitle": "پیام جدید",
+    "newMessageBody": "شما یک پیام جدید دریافت کردید.",
+    "channelName": "پیام‌های چت"
+  }
 }

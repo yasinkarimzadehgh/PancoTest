@@ -1,6 +1,27 @@
-const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-const englishDigits = /[\u0030-\u0039]/g; // RegExp for all English digits
+import fa from '../locales/fa-IR.json';
 
+export const t = (key, replacements = {}) => {
+  const keys = key.split('.');
+  let value = fa;
+  try {
+    for (const k of keys) {
+      value = value[k];
+    }
+  } catch (e) {
+    return key;
+  }
+
+  if (typeof value === 'string') {
+    Object.keys(replacements).forEach(placeholder => {
+      value = value.replace(`{${placeholder}}`, replacements[placeholder]);
+    });
+    return value;
+  }
+  return key;
+};
+
+const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+const englishDigits = /[\u0030-\u0039]/g;
 
 export const toPersianDigits = (input) => {
   if (input === null || input === undefined) return '';
@@ -8,7 +29,7 @@ export const toPersianDigits = (input) => {
 };
 
 export const toShamsiDate = (date) => {
-  if (!date) return 'تاریخ نامشخص';
+  if (!date) return t('common.unknownDate');
 
   const dateObj = typeof date === 'number' ? new Date(date * 1000) : date;
 
@@ -22,6 +43,6 @@ export const toShamsiDate = (date) => {
     return toPersianDigits(formattedDate);
   } catch (error) {
     console.error("Error formatting date:", error);
-    return 'تاریخ نامشخص';
+    return t('common.unknownDate');
   }
 };
