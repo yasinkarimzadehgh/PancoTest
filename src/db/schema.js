@@ -27,6 +27,8 @@ export const mySchema = appSchema({
         { name: 'phone_number', type: 'string', isOptional: true },
         { name: 'description', type: 'string', isOptional: true },
         { name: 'avatar_url', type: 'string', isOptional: true },
+        { name: 'followers', type: 'number', isOptional: true },
+        { name: 'following', type: 'number', isOptional: true },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
         { name: 'last_active_time', type: 'string', isOptional: true },

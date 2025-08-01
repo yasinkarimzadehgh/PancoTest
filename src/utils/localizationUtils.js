@@ -1,3 +1,4 @@
+import moment from 'jalali-moment';
 import fa from '../locales/fa-IR.json';
 
 export const t = (key, replacements = {}) => {
@@ -30,19 +31,5 @@ export const toPersianDigits = (input) => {
 
 export const toShamsiDate = (date) => {
   if (!date) return t('common.unknownDate');
-
-  const dateObj = typeof date === 'number' ? new Date(date * 1000) : date;
-
-  try {
-    const formattedDate = new Intl.DateTimeFormat('fa-IR-u-nu-latn', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).format(dateObj);
-
-    return toPersianDigits(formattedDate);
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return t('common.unknownDate');
-  }
+  return moment.unix(date).locale('fa').format('YYYY/MM/DD');
 };

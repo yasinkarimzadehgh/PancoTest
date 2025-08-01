@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList, Text, Alert } from 'react-native';
 import withObservables from '@nozbe/with-observables';
 import { Q } from '@nozbe/watermelondb';
+import moment from 'jalali-moment';
 import Header from '../../components/Header/Header';
 import FloatingActionButton from '../../components/FloatingActionButton/FloatingActionButton';
 import ChatListItem from '../../components/ChatListItem/ChatListItem';
@@ -15,19 +16,11 @@ import { t } from '../../utils/localizationUtils';
 
 const formatChatTimestamp = (timestamp) => {
   if (!timestamp) return '';
-  const messageDate = new Date(timestamp);
-  const now = new Date();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if (messageDate >= startOfToday) {
-    return messageDate.toLocaleTimeString('fa-IR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const messageMoment = moment(timestamp);
+  if (messageMoment.isSame(moment(), 'day')) {
+    return messageMoment.locale('fa').format('HH:mm');
   } else {
-    return messageDate.toLocaleDateString('fa-IR', {
-      month: 'long',
-      day: 'numeric',
-    });
+    return messageMoment.locale('fa').format('D MMMM');
   }
 };
 
@@ -41,7 +34,7 @@ const ChatListScreen = ({ navigation, chats }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [chatsToDelete, setChatsToDelete] = useState([]);
 
-  const handleNewChatPress = () => {}
+  const handleNewChatPress = () => Alert.alert(t('fab.new'), t('chatList.newChatAlert'));
 
   const toggleSelection = (itemId) => {
     const newSelection = new Set(selectedItems);

@@ -19,6 +19,8 @@ async function saveUserToDB(profileData) {
     phoneNumber: profileData.phone_number,
     description: profileData.description,
     avatarUrl: getImageUrl(profileData.image_server_id, profileData.image_path),
+    followers: profileData.followers,
+    following: profileData.following,
     lastActiveTime: profileData.last_active_time,
     views: profileData.views,
     likes: profileData.likes,
