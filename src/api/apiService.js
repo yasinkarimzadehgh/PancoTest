@@ -15,7 +15,6 @@ export const syncChats = async (syncType = 1) => {
     return response;
   } catch (error) {
     // console.error('[API] syncChats error:', error.message);
-    throw error;
   }
 };
 
@@ -32,7 +31,6 @@ export const syncAcknowledge = async (updateMessageId) => {
     return response;
   } catch (error) {
     // console.error('[API] syncAcknowledge error:', error.message);
-    throw error;
   }
 };
 
@@ -49,7 +47,6 @@ export const getProfileInfo = async (userId) => {
         return response;
     } catch (error) {
         // console.error('[API] getProfileInfo error:', error.message);
-        throw error;
     }
 };
 
@@ -67,7 +64,6 @@ export const clearHistory = async (chatIds) => {
     return response;
   } catch (error) {
     // console.error('[API] clearHistory error:', error.message);
-    throw error;
   }
 };
 
@@ -84,7 +80,6 @@ export const pinChats = async (pinnedChatIds) => {
     return response;
   } catch (error) {
     // console.error('[API] pinChats error:', error.message);
-    throw error;
   }
 };
 
@@ -104,6 +99,5 @@ export const registerDevice = async (fcmToken) => {
     return response;
   } catch (error) {
     // console.error('[API] registerDevice error:', error.message);
-    throw error;
   }
 };

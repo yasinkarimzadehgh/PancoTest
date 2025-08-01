@@ -1,18 +1,17 @@
 import React, { useState, useCallback } from 'react';
-import { View, Alert, FlatList, Text } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import withObservables from '@nozbe/with-observables';
 import { Q } from '@nozbe/watermelondb';
-import { map } from 'rxjs/operators';
 import Header from '../../components/Header/Header';
 import FloatingActionButton from '../../components/FloatingActionButton/FloatingActionButton';
 import ChatListItem from '../../components/ChatListItem/ChatListItem';
 import EmptyListComponent from '../../components/EmptyListComponent/EmptyListComponent';
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import useChatStore from '../../stores/chat';
 import styles from './ChatListScreen.styles';
 import { database } from '../../db';
 import images_map from '../../assets/images/images_map';
 import { t } from '../../utils/localizationUtils';
-import { OWNER_USER_ID } from '../../api/config';
 
 const formatChatTimestamp = (timestamp) => {
   if (!timestamp) return '';
@@ -34,13 +33,15 @@ const formatChatTimestamp = (timestamp) => {
 
 const ChatDivider = () => <View style={styles.divider} />;
 
-const ChatListScreen = ({ navigation, chats, owner }) => {
+const ChatListScreen = ({ navigation, chats }) => {
   const { error, deleteChats, togglePinChat } = useChatStore();
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [revealedChatItemId, setRevealedChatItemId] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [chatsToDelete, setChatsToDelete] = useState([]);
 
-  const handleNewChatPress = () => Alert.alert(t('fab.new'), t('chatList.newChatAlert'));
+  const handleNewChatPress = () => {}
 
   const toggleSelection = (itemId) => {
     const newSelection = new Set(selectedItems);
@@ -59,12 +60,8 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
     }
     if (selectionMode) {
       toggleSelection(item.id);
-    } else {
-      if (item.otherPartyId) {
-        navigation.navigate('Profile', { userId: item.otherPartyId });
-      } else {
-        Alert.alert(t('common.info'), t('chatList.noProfile'));
-      }
+    } else if (item.otherPartyId) {
+      navigation.navigate('Profile', { userId: item.otherPartyId });
     }
   };
 
@@ -74,43 +71,31 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
   };
 
   const handleDeleteSelected = () => {
-    Alert.alert(
-      t('chatList.deleteCountTitle', { count: selectedItems.size }),
-      t('chatList.deleteConfirmMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('chatList.confirmDelete'),
-          style: 'destructive',
-          onPress: () => {
-            const remoteIdsToDelete = chats
-              .filter(c => selectedItems.has(c.id))
-              .map(c => c.remoteId);
-            deleteChats({ chatIds: remoteIdsToDelete });
-            setSelectionMode(false);
-            setSelectedItems(new Set());
-          },
-        },
-      ]
-    );
+    const remoteIdsToDelete = chats
+      .filter(c => selectedItems.has(c.id))
+      .map(c => c.remoteId);
+    setChatsToDelete(remoteIdsToDelete);
+    setModalVisible(true);
   };
 
   const handleSingleDelete = (item) => {
-    Alert.alert(
-      t('chatList.deleteSingleTitle', { name: item.name }),
-      t('chatList.deleteConfirmMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('chatList.confirmDelete'),
-          style: 'destructive',
-          onPress: () => {
-            setRevealedChatItemId(null);
-            deleteChats({ chatIds: [item.remoteId] });
-          },
-        },
-      ]
-    );
+    setChatsToDelete([item.remoteId]);
+    setModalVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (chatsToDelete.length > 0) {
+      deleteChats({ chatIds: chatsToDelete });
+    }
+    setModalVisible(false);
+    setChatsToDelete([]);
+    if (selectionMode) {
+      setSelectionMode(false);
+      setSelectedItems(new Set());
+    }
+    if (revealedChatItemId) {
+      setRevealedChatItemId(null);
+    }
   };
 
   if (error) {
@@ -159,9 +144,6 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
         title={t('chatList.title')}
         selectionMode={selectionMode}
         selectedCount={selectedItems.size}
-        ownerName={owner?.name}
-        ownerAvatarUrl={owner?.avatarUrl}
-        onAvatarPress={() => owner && navigation.navigate('Profile', { userId: owner.remoteId })}
         onDeletePress={() => setSelectionMode(true)}
         onCancelSelection={() => {
           setSelectionMode(false);
@@ -179,10 +161,19 @@ const ChatListScreen = ({ navigation, chats, owner }) => {
           <EmptyListComponent title={t('chatList.emptyMessage')} />
         }
         contentContainerStyle={{ flexGrow: 1 }}
-        extraData={{ selectionMode, selectedItems, owner, revealedChatItemId }}
+        extraData={{ selectionMode, selectedItems, revealedChatItemId }}
       />
 
       {!selectionMode && <FloatingActionButton onPress={handleNewChatPress} />}
+
+      <ConfirmationModal
+        isVisible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={handleConfirmDelete}
+        title={t('modals.deleteConfirm.title')}
+        confirmText={t('modals.deleteConfirm.confirmText')}
+        cancelText={t('modals.deleteConfirm.cancelText')}
+      />
     </View>
   );
 };
@@ -192,11 +183,6 @@ const enhance = withObservables([], () => ({
     Q.sortBy('is_pinned', Q.desc),
     Q.sortBy('last_message_at', Q.desc)
   ).observe(),
-  owner: database.get('users').query(Q.where('remote_id', OWNER_USER_ID))
-    .observe()
-    .pipe(
-      map(users => users[0])
-    ),
 }));
 
 export default enhance(ChatListScreen);

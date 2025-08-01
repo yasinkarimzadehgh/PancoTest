@@ -26,7 +26,7 @@ const onMessageReceived = (event) => {
     // console.log('[WebSocket] Parsed message:', parsedData);
     useChatStore.getState().websocketMessageReceived(parsedData);
   } catch (error) {
-    console.error('[WebSocket] Error processing Kafka message:', error);
+    // console.error('[WebSocket] Error processing Kafka message:', error);
   }
 };
 
@@ -38,7 +38,6 @@ export const initWebSocket = async () => {
   }
 
   if (ws && ws.readyState === WebSocket.OPEN) return;
- 
   if (ws) ws.close();
   if (pingTimeout) clearTimeout(pingTimeout);
 
@@ -52,9 +51,9 @@ export const initWebSocket = async () => {
   ws.onmessage = onMessageReceived;
 
   ws.onerror = (error) => {
-    console.error('[WebSocket] Kafka connection error:', error.message);
+    // console.error('[WebSocket] Kafka connection error:', error.message);
   };
- 
+
   ws.onclose = () => {
     // console.log('[WebSocket] Kafka connection closed.');
     if (pingTimeout) clearTimeout(pingTimeout);

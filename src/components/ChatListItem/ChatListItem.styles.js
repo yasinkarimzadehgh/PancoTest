@@ -9,7 +9,7 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     alignItems: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     height: 75,
   },
   revealedOverlay: {
@@ -56,7 +56,7 @@ export default StyleSheet.create({
     marginTop: 4,
   },
   name: {
-    ...textStyles.bodyBold,
+    ...textStyles.body,
   },
   timeAndPinContainer: {
     flexDirection: 'row',
@@ -82,7 +82,6 @@ export default StyleSheet.create({
   },
   lastMessage: {
     ...textStyles.caption,
-    fontSize: 14,
     textAlign: 'right',
   },
   typingText: {
@@ -92,19 +91,19 @@ export default StyleSheet.create({
   unreadBadge: {
     backgroundColor: colors.badge,
     borderRadius: 10,
-    minWidth: 20,
-    height: 20,
+    minWidth: 17,
+    height: 17,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 6,
   },
   unreadText: {
     ...textStyles.button,
-    fontSize: 11,
+    fontSize: 9,
   },
   selectionIcon: {
-    width: 24,
-    height: 24,
+    width: 18,
+    height: 18,
     marginLeft: 15,
   },
   actionsRow: {

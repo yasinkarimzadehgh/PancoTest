@@ -1,14 +1,14 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SplashScreen from '../screens/Splash/SplashScreen';
-import ChatListScreen from '../screens/ChatList/ChatListScreen';
-import ProfileScreen from '../screens/Profile/ProfileScreen';
-import useChatStore from '../stores/chat';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import SplashScreen from '../screens/Splash/SplashScreen'
+import ChatListScreen from '../screens/ChatList/ChatListScreen'
+import ProfileScreen from '../screens/Profile/ProfileScreen'
+import useChatStore from '../stores/chat'
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 const AppNavigator = () => {
-  const isLoading = useChatStore((state) => state.isLoading);
+  const isLoading = useChatStore((state) => state.isLoading)
 
   return (
     <Stack.Navigator
@@ -29,4 +29,4 @@ const AppNavigator = () => {
   );
 };
 
-export default AppNavigator;
+export default AppNavigator

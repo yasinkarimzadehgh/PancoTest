@@ -1,21 +1,24 @@
-import React, { useEffect, useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import withObservables from '@nozbe/with-observables';
 import { Q } from '@nozbe/watermelondb';
 import { map } from 'rxjs/operators';
 import Header from '../../components/Header/Header';
 import Avatar from '../../components/Avatar/Avatar';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import useUserStore from '../../stores/user';
 import styles from './ProfileScreen.styles';
 import { database } from '../../db';
 import images_map from '../../assets/images/images_map';
-import { OWNER_USER_ID } from '../../api/config';
 import { t, toPersianDigits, toShamsiDate } from '../../utils/localizationUtils';
 
-const StatItem = ({ icon, text }) => (
+const StatItem = ({ icon, value, label }) => (
   <View style={styles.statItem}>
     <Image source={icon} style={styles.statIcon} />
-    <Text style={styles.statText}>{text}</Text>
+    <Text>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </Text>
   </View>
 );
 
@@ -29,32 +32,23 @@ const ProfileScreen = ({ route, navigation, user }) => {
     }
   }, [userId, fetchProfile]);
 
-  const isOwner = useMemo(() => userId === OWNER_USER_ID, [userId]);
-
   if (isLoading && !user) {
-    return <View style={styles.loadingContainer}><ActivityIndicator size="large" color="#0D052A" /></View>;
+    return <LoadingIndicator />;
   }
   if (error) {
     console.log("Error fetching profile, using cached data if available.", error);
   }
   if (!user) {
-    return <View style={styles.loadingContainer}><Text>{t('profile.loading')}</Text></View>;
+    return <LoadingIndicator />;
   }
 
   const { name = t('profile.defaultName'), avatarUrl, lastActiveTime, createdDate,
           views = 0, likes = 0, followers = 0, following = 0, followed = false,
-          userName, remoteId: refCode } = user;
+          userName, remoteId: refCode, description } = user;
 
   const formattedLastActiveTime = lastActiveTime === 'recently' ? t('profile.recentlyActive') : (lastActiveTime || '');
 
   const renderFollowButton = () => {
-    if (isOwner) {
-      return (
-        <TouchableOpacity style={[styles.profileActionButton, { backgroundColor: '#0D052A' }]}>
-          <Text style={styles.actionButtonText}>{t('profile.editProfile')}</Text>
-        </TouchableOpacity>
-      );
-    }
     return (
       <TouchableOpacity style={[styles.profileActionButton, { backgroundColor: followed ? '#EEEEEE' : '#0D052A' }]}>
         <Text style={[styles.actionButtonText, { color: followed ? '#6B7280' : 'white' }]}>
@@ -82,9 +76,9 @@ const ProfileScreen = ({ route, navigation, user }) => {
               </View>
             </View>
             <View style={styles.statsRow}>
-              <StatItem icon={images_map.calendar} text={t('profile.memberSince', { date: toShamsiDate(createdDate) })} />
-              <StatItem icon={images_map.view} text={t('profile.views', { count: toPersianDigits(views) })} />
-              <StatItem icon={images_map.like} text={t('profile.likes', { count: toPersianDigits(likes) })} />
+              <StatItem value={toShamsiDate(createdDate)} label={t('profile.memberSinceLabel')} icon={images_map.calendar} />
+              <StatItem value={toPersianDigits(views)} label={t('profile.viewsLabel')} icon={images_map.view} />
+              <StatItem value={toPersianDigits(likes)} label={t('profile.likesLabel')} icon={images_map.like} />
             </View>
           </View>
 
@@ -104,19 +98,25 @@ const ProfileScreen = ({ route, navigation, user }) => {
           </View>
 
           <View style={styles.detailsSection}>
-              {userName && (
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>{t('profile.usernameLabel')}</Text>
-                  <Text style={styles.detailValue}>@{userName}</Text>
-                </View>
-              )}
-              {refCode && (
-                <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
-                  <Text style={styles.detailLabel}>{t('profile.refCodeLabel')}</Text>
-                  <Text style={styles.detailValue}>{toPersianDigits(refCode)}</Text>
-                </View>
-              )}
+            {userName && (
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>{t('profile.usernameLabel')}</Text>
+                <Text style={styles.detailValue}>@{userName}</Text>
+              </View>
+            )}
+            {refCode && (
+              <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
+                <Text style={styles.detailLabel}>{t('profile.refCodeLabel')}</Text>
+                <Text style={styles.detailValue}>{toPersianDigits(refCode)}</Text>
+              </View>
+            )}
           </View>
+          {description && (
+            <View style={styles.storySection}>
+              <Text style={styles.storyLabel}>{t('profile.storyLabel')}</Text>
+              <Text style={styles.storyText}>{description}</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>

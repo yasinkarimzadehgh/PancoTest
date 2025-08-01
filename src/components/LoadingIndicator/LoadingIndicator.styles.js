@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
-import { textStyles } from '../../styles/typography';
 
 export default StyleSheet.create({
   container: {
@@ -9,14 +8,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.background,
   },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
-    tintColor: colors.primary,
-  },
-  loadingText: {
-    ...textStyles.body,
-    marginTop: 16,
+  lottieAnimation: {
+    width: '170%',
+    aspectRatio: 1,
   },
 });

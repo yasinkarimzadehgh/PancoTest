@@ -15,13 +15,13 @@ export const fontFamilies = {
 
 export const textStyles = StyleSheet.create({
   title: {
-    fontFamily: fontFamilies.yekanBold,
-    fontSize: 20,
+    fontFamily: fontFamilies.yekanRegular,
+    fontSize: 12,
     color: colors.textPrimary,
   },
   body: {
     fontFamily: fontFamilies.yekanRegular,
-    fontSize: 16,
+    fontSize: 12,
     color: colors.textPrimary,
   },
   bodyBold: {
@@ -31,12 +31,12 @@ export const textStyles = StyleSheet.create({
   },
   caption: {
     fontFamily: fontFamilies.yekanRegular,
-    fontSize: 12,
+    fontSize: 10,
     color: colors.textSecondary,
   },
   button: {
     fontFamily: fontFamilies.yekanBold,
-    fontSize: 16,
+    fontSize: 10,
     color: colors.white,
   },
 });

@@ -5,13 +5,11 @@ import { textStyles } from '../../styles/typography';
 export default StyleSheet.create({
   headerContainer: {
     height: 60,
-    backgroundColor: colors.background,
+    backgroundColor: colors.white,
     flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   selectionHeaderContainer: {
     flex: 1,
@@ -23,7 +21,7 @@ export default StyleSheet.create({
   rightContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
-    gap:6,
+    gap: 6,
   },
   leftContainer: {
     flexDirection: 'row-reverse',
@@ -31,10 +29,9 @@ export default StyleSheet.create({
   },
   title: {
     ...textStyles.title,
-    marginLeft: 16,
   },
   iconButton: {
-    marginRight:5
+    marginRight: 5,
   },
   iconImage: {
     width: 24,
@@ -44,7 +41,6 @@ export default StyleSheet.create({
   deleteButtonText: {
     ...textStyles.button,
     backgroundColor: colors.primary,
-    fontSize: 15,
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 12,

@@ -5,7 +5,7 @@ import { textStyles } from '../../styles/typography';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
   },
   errorContainer: {
     flex: 1,

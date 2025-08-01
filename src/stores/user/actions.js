@@ -5,8 +5,5 @@ export const actions = {
   fetchProfile: (payload) => ({
     type: FETCH_PROFILE,
     payload,
-  }),
-  fetchOwnProfile: () => ({
-    type: FETCH_OWN_PROFILE,
-  }),
+  })
 };

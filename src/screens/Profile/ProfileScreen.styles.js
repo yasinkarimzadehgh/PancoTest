@@ -7,17 +7,12 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.surface,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.background,
-  },
   profileContentWrapper: {
     backgroundColor: colors.white,
     marginHorizontal: 12,
     borderRadius: 20,
     marginTop: 15,
+    paddingBottom: 16,
   },
   mainInfoSection: {
     paddingHorizontal: 16,
@@ -36,7 +31,7 @@ export default StyleSheet.create({
   },
   name: {
     ...textStyles.title,
-    fontSize: 18,
+    fontSize: 12,
   },
   lastActive: {
     ...textStyles.caption,
@@ -58,7 +53,12 @@ export default StyleSheet.create({
     tintColor: colors.textSecondary,
     marginLeft: 5,
   },
-  statText: {
+  statValue: {
+    ...textStyles.body,
+    fontSize: 10,
+    color: colors.textPrimary,
+  },
+  statLabel: {
     ...textStyles.caption,
   },
   followSection: {
@@ -75,7 +75,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   followStatValue: {
-    ...textStyles.bodyBold,
+    ...textStyles.body,
+    fontSize: 10,
   },
   followStatLabel: {
     ...textStyles.caption,
@@ -100,20 +101,43 @@ export default StyleSheet.create({
   detailsSection: {
     paddingTop: 16,
     marginHorizontal: 16,
-    borderTopColor: colors.border,
   },
   detailRow: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   detailLabel: {
     ...textStyles.caption,
-    fontSize: 14,
+    fontSize: 10,
+    color: 'black',
   },
   detailValue: {
-    ...textStyles.bodyBold,
-    fontSize: 14,
+    ...textStyles.body,
+    fontSize: 10,
+    color: '#2EAAD9'
+  },
+  storySection: {
+    backgroundColor: '#f9f8f8ff',
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 16,
+    marginTop: 16,
+  },
+  storyLabel: {
+    ...textStyles.caption,
+    fontSize: 11,
+    color: 'black',
+    marginBottom: 8,
+    textAlign: 'right',
+  },
+  storyText: {
+    ...textStyles.body,
+    color: colors.textSecondary,
+    textAlign: 'right',
+    lineHeight: 22,
   },
 });

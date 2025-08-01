@@ -8,27 +8,22 @@ import { colors } from './src/styles/colors';
 import { initializeNetworkObserver } from './src/api/websocketService';
 import useNotificationStore from './src/stores/notification';
 import useChatStore from './src/stores/chat';
-import useUserStore from './src/stores/user';
 import { setupNotificationHandlers } from './src/services/notificationHandler';
 
 const App = () => {
   const { registerDevice } = useNotificationStore();
   const { fetchChats } = useChatStore();
-  const { fetchOwnProfile } = useUserStore();
 
   useEffect(() => {
-    // console.log('[App.js] Main useEffect mounting...');
     const unsubscribe = setupNotificationHandlers();
     initializeNetworkObserver();
     registerDevice();
-    fetchOwnProfile();
     fetchChats({ syncType: 1 });
 
     return () => {
-      // console.log('[App.js] Main useEffect unmounting...');
       unsubscribe();
     };
-  }, [registerDevice, fetchChats, fetchOwnProfile]);
+  }, [registerDevice, fetchChats]);
 
   return (
     <DatabaseProvider database={database}>

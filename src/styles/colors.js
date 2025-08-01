@@ -1,8 +1,9 @@
 export const lightTheme = {
-  background: '#FFFFFF',
-  surface: '#F9FAFB',
+  white: '#ffffffff',
+  background: '#F9FAFB',
+  surface: '#F7F5F5',
   textPrimary: '#1F2937',
-  textSecondary: '#6B7280',
+  textSecondary: '#8f95a1ff',
   primary: "#0D052A",
   badge: "#0D052A",
   badgeMuted: '#6C6D79',

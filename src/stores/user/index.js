@@ -7,7 +7,6 @@ const useUserStore = create(
   sagaMiddleware(userSaga, (set, get, store) => {
     const dispatchableActions = {
       fetchProfile: (payload) => store.putActionToSaga(actions.fetchProfile(payload)),
-      fetchOwnProfile: () => store.putActionToSaga(actions.fetchOwnProfile()),
     };
 
     return {

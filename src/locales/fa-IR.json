@@ -34,13 +34,14 @@
     "editProfile": "ویرایش پروفایل",
     "isFollowing": "دنبال می‌کنی",
     "follow": "دنبال کردن",
-    "memberSince": "{date} عضو شده",
-    "views": "{count} دیده شده",
-    "likes": "{count} لایک شده",
+    "memberSinceLabel": " عضو شده",
+    "viewsLabel": " دیده شده",
+    "likesLabel": " لایک شده",
     "followers": "دنبال کننده",
-    "followingCount": "دنبال شونده",
+    "followingCount": "دنبال می‌کنی",
     "usernameLabel": "نام کاربری:",
-    "refCodeLabel": "کد معرف:"
+    "refCodeLabel": "کد معرف:",
+    "storyLabel": "داستان"
   },
   "chatList": {
     "title": "گپ ها",
@@ -60,5 +61,12 @@
     "newMessageTitle": "پیام جدید",
     "newMessageBody": "شما یک پیام جدید دریافت کردید.",
     "channelName": "پیام‌های چت"
+  },
+  "modals": {
+    "deleteConfirm": {
+      "title": "مطمئنی؟",
+      "confirmText": "بله، حذف کن",
+      "cancelText": "نه، فعلاً"
+    }
   }
 }

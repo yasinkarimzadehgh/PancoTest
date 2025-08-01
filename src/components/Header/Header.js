@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import Avatar from '../Avatar/Avatar';
 import styles from './Header.styles';
 import images_map from '../../assets/images/images_map';
 import { t } from '../../utils/localizationUtils';
@@ -12,9 +11,6 @@ const Header = (props) => {
     onBackPress,
     selectionMode,
     selectedCount,
-    ownerName,
-    ownerAvatarUrl,
-    onAvatarPress,
     onDeletePress,
     onCancelSelection,
     onConfirmDelete,
@@ -23,9 +19,6 @@ const Header = (props) => {
   const renderChatListHeader = () => (
     <>
       <View style={styles.rightContainer}>
-        <TouchableOpacity onPress={onAvatarPress}>
-          <Avatar name={ownerName || '?'} imageUrl={ownerAvatarUrl} size={36} />
-        </TouchableOpacity>
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.leftContainer}>
