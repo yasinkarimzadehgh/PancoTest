@@ -40,7 +40,7 @@ const ChatListItem = (props) => {
     styles.unreadBadge,
     { backgroundColor: isMute ? colors.badgeMuted : colors.badge },
   ];
-          
+
   return (
     <TouchableOpacity
       style={styles.container}

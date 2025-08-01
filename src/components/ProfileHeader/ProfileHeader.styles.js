@@ -5,24 +5,23 @@ export default StyleSheet.create({
   headerContainer: {
     height: 60,
     backgroundColor: colors.background,
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingHorizontal: 16,
+    borderBottomWidth: 0,
   },
   backButton: {
-    padding: 10,
+    padding: 8,
   },
-  backButtonText: {
-    fontSize: 24,
-    color: colors.textPrimary,
-    transform: [{ scaleX: -1 }],
+  backIcon: {
+    width: 24,
+    height: 24,
+    tintColor: colors.textPrimary,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: colors.textPrimary,
-    marginLeft: 15,
+    marginRight: 1,
   },
 });

@@ -18,7 +18,7 @@ async function updateChatsInDatabase(updates, pinnedChatIds) {
   const allRemoteIds = Object.keys(updates);
   const existingChats = await chatsCollection.query(Q.where('remote_id', Q.oneOf(allRemoteIds))).fetch();
   const existingChatsMap = new Map(existingChats.map(c => [c.remoteId, c]));
-  
+
   const batchOperations = allRemoteIds.map(key => {
     const chatData = updates[key];
     const lastMessageItem = chatData.sort((a,b) => b.date - a.date).find(item => item.message_id);
@@ -56,10 +56,10 @@ async function updateChatsInDatabase(updates, pinnedChatIds) {
 function* fetchChatsSaga(action) {
   const syncType = action.payload?.syncType || 1;
   const chatsCollection = database.get('chats');
-  
+
   try {
     const chatCount = yield call([chatsCollection.query(), 'fetchCount']);
-    
+
     if (chatCount > 0) {
       yield setState({ isLoading: false, error: null });
     } else {
@@ -118,7 +118,7 @@ function* pinChatSaga(action) {
         if (chats.length > 0) {
             const chat = chats[0];
             const newPinnedStatus = !chat.isPinned;
-            
+
             yield database.write(async () => {
                 await chat.update(record => {
                     record.isPinned = newPinnedStatus;
@@ -127,7 +127,7 @@ function* pinChatSaga(action) {
 
             const allChats = yield database.get('chats').query().fetch();
             const pinnedChatIds = allChats.filter(c => c.isPinned).map(c => c.remoteId);
-            
+
             const response = yield call(pinChats, pinnedChatIds);
             if (response.data.status !== 'success') {
                 throw new Error(response.data.reason);

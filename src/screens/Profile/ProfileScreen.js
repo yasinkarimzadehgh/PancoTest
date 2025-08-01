@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import withObservables from '@nozbe/with-observables';
 import { Q } from '@nozbe/watermelondb';
@@ -8,24 +8,15 @@ import ProfileHeader from '../../components/ProfileHeader/ProfileHeader';
 import Avatar from '../../components/Avatar/Avatar';
 import useProfileStore from '../../stores/profileStore';
 import styles from './ProfileScreen.styles';
-import { colors } from '../../styles/colors';
 import { database } from '../../db';
+import images_map from '../../assets/images/images_map';
+import { OWNER_USER_ID } from '../../api/config';
+import { toPersianDigits, toShamsiDate } from '../../utils/localizationUtils';
 
-const formatJoinDate = (timestamp) => {
-  if (!timestamp) return '';
-  const date = new Date(timestamp * 1000);
-  const formattedDate = new Intl.DateTimeFormat('fa-IR-u-nu-latn', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  }).format(date);
-  return `${formattedDate} عضو شده`;
-};
-
-const StatItem = ({ value, label }) => (
+const StatItem = ({ icon, text }) => (
   <View style={styles.statItem}>
-    <Text style={styles.statValue}>{value}</Text>
-    <Text style={styles.statLabel}>{label}</Text>
+    <Image source={icon} style={styles.statIcon} />
+    <Text style={styles.statText}>{text}</Text>
   </View>
 );
 
@@ -38,85 +29,98 @@ const ProfileScreen = ({ route, navigation, user }) => {
       fetchProfile({ userId });
     }
   }, [userId, fetchProfile]);
-  
+
+  const isOwner = useMemo(() => userId === OWNER_USER_ID, [userId]);
+
   if (isLoading && !user) {
-    return <View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary} /></View>;
+    return <View style={styles.loadingContainer}><ActivityIndicator size="large" color="#0D052A" /></View>;
   }
-
-  if (error && !user) {
-    return <View style={styles.loadingContainer}><Text>خطا: {error}</Text></View>;
+  if (error) {
+    console.log("Error fetching profile, using cached data if available.", error);
   }
-
   if (!user) {
     return <View style={styles.loadingContainer}><Text>در حال بارگذاری پروفایل...</Text></View>;
   }
 
+  const { name = 'کاربر پنکو', avatarUrl, lastActiveTime, createdDate,
+          views = 0, likes = 0, followers = 0, following = 0, followed = false,
+          userName, remoteId: معرفCode } = user;
+
+  const formattedLastActiveTime = lastActiveTime === 'recently' ? 'همین چند دقیقه پیش' : (lastActiveTime || '');
+
+  const renderFollowButton = () => {
+    if (isOwner) {
+      return (
+        <TouchableOpacity style={[styles.profileActionButton, { backgroundColor: '#0D052A' }]}>
+          <Text style={styles.actionButtonText}>ویرایش پروفایل</Text>
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <TouchableOpacity style={[styles.profileActionButton, { backgroundColor: followed ? '#EEEEEE' : '#0D052A' }]}>
+        <Text style={[styles.actionButtonText, { color: followed ? '#6B7280' : 'white' }]}>
+          {followed ? 'دنبال می‌کنی' : 'دنبال کردن'}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ProfileHeader title="پروفایل" onBackPress={() => navigation.goBack()} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        
-        <View style={styles.mainCard}>
+      <ScrollView contentContainerStyle={{paddingBottom: 32}}>
+        <View style={styles.profileContentWrapper}> 
+
           <View style={styles.mainInfoSection}>
-            <Avatar name={user.name} imageUrl={user.avatarUrl} size={60} />
-            <View style={styles.nameAndDateSection}>
-              <View style={styles.nameRow}>
-                 <Text style={styles.name}>{user.name || 'کاربر پنکو'}</Text>
-                 <View style={styles.ratingBadge}>
-                    <Text style={styles.ratingText}>۸.۶۵</Text>
-                 </View>
+            <View style={styles.userInfoSection}>
+              <Avatar name={name} imageUrl={avatarUrl} size={70} />
+              <View style={styles.nameSection}>
+                <Text style={styles.name}>{name}</Text>
+                <Text style={styles.lastActive}>{formattedLastActiveTime}</Text>
               </View>
-              <Text style={styles.joinDate}>{formatJoinDate(user.createdAt.getTime() / 1000)}</Text>
+            </View>
+            <View style={styles.statsRow}>
+              <StatItem icon={images_map.calendar} text={`${toShamsiDate(createdDate)} عضو شده`} />
+              <StatItem icon={images_map.view} text={`${toPersianDigits(views)} دیده شده`} />
+              <StatItem icon={images_map.like} text={`${toPersianDigits(likes)} لایک شده`} />
             </View>
           </View>
-          
-          <View style={styles.statsRow}>
-            <StatItem value={user.followers || 0} label="دنبال کننده" />
-            <StatItem value={user.following || 0} label="دنبال می‌کنی" />
-          </View>
 
-          <TouchableOpacity style={styles.editProfileButton}>
-            <Text style={styles.editProfileButtonText}>ویرایش پروفایل</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.infoCard}>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>شماره موبایل:</Text>
-            <Text style={styles.infoValue}>{user.phoneNumber || '+۹۸۹۱۲۳۴۵۶۷۸۹'}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>نام کاربری:</Text>
-            <Text style={styles.infoValue}>@{user.userName || '---'}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>کد معرف:</Text>
-            <View style={styles.referralContainer}>
-              <TouchableOpacity>
-                <Text style={styles.shareIcon}>🔗</Text>
-              </TouchableOpacity>
-              <Text style={styles.infoValue}>{user.remoteId}</Text>
+          <View style={styles.followSection}>
+            <View style={styles.followStats}>
+              <View style={styles.followStatItem}>
+                <Text style={styles.followStatValue}>{toPersianDigits(followers)}</Text>
+                <Text style={styles.followStatLabel}>دنبال کننده</Text>
+              </View>
+              <View style={styles.verticalDivider} />
+              <View style={styles.followStatItem}>
+                <Text style={styles.followStatValue}>{toPersianDigits(following)}</Text>
+                <Text style={styles.followStatLabel}>دنبال شونده</Text>
+              </View>
             </View>
+            {renderFollowButton()}
+          </View>
+
+          <View style={styles.detailsSection}>
+              {userName && (
+                  <View style={styles.detailRow}>
+                      <Text style={styles.detailLabel}>نام کاربری:</Text>
+                      <Text style={styles.detailValue}>@{userName}</Text>
+                  </View>
+              )}
+              {معرفCode && (
+                  <View style={[styles.detailRow, {borderBottomWidth: 0}]}>
+                      <Text style={styles.detailLabel}>کد معرف:</Text>
+                      <Text style={styles.detailValue}>{toPersianDigits(معرفCode)}</Text>
+                  </View>
+              )}
           </View>
         </View>
-
-        <TouchableOpacity style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>کلکسیون‌های تموم شده</Text>
-        </TouchableOpacity>
-
-        <View style={styles.infoCard}>
-          <Text style={styles.infoLabel}>داستان:</Text>
-          <Text style={styles.bioText}>{user.description || 'توضیحاتی ثبت نشده است.'}</Text>
-        </View>
-
-        <TouchableOpacity style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>تنظیمات پنکو</Text>
-        </TouchableOpacity>
-
       </ScrollView>
     </View>
   );
 };
+
 
 const enhance = withObservables(['route'], ({ route }) => ({
   user: database.get('users').query(Q.where('remote_id', route.params.userId))

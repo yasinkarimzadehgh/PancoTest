@@ -13,6 +13,12 @@ export default class User extends Model {
   @field('followers') followers;
   @field('following') following;
 
+  @text('last_active_time') lastActiveTime;
+  @field('views') views;
+  @field('likes') likes;
+  @field('followed') followed;
+  @field('created_date') createdDate;
+
   @readonly @date('created_at') createdAt;
   @readonly @date('updated_at') updatedAt;
 }

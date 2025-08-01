@@ -12,144 +12,116 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.background,
   },
-  scrollViewContent: {
-    padding: 16,
-  },
-  mainCard: {
+  profileContentWrapper: {
     backgroundColor: colors.white,
+    marginHorizontal: 12,
     borderRadius: 20,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  infoCard: {
-    backgroundColor: colors.white,
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    marginTop: 15,
   },
   mainInfoSection: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 24,
+    alignItems: 'flex-end',
+  },
+  userInfoSection: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
+    width: '100%',
   },
-  nameAndDateSection: {
-    flex: 1,
-    marginRight: 12,
-  },
-  nameRow: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
+  nameSection: {
+    marginRight: 16,
+    alignItems: 'flex-end',
   },
   name: {
     fontSize: 18,
     fontWeight: 'bold',
     color: colors.textPrimary,
   },
-  ratingBadge: {
-    backgroundColor: '#EBFDEF',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    marginRight: 8,
-  },
-  ratingText: {
-    color: '#28A745',
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-  joinDate: {
+  lastActive: {
     fontSize: 12,
     color: colors.textSecondary,
-    textAlign: 'right',
     marginTop: 4,
   },
   statsRow: {
     flexDirection: 'row-reverse',
-    justifyContent: 'flex-start',
-    marginTop: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 24,
   },
   statItem: {
-    alignItems: 'flex-end',
-    marginLeft: 24,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
   },
-  statValue: {
+  statIcon: {
+    width: 16,
+    height: 16,
+    tintColor: colors.textSecondary,
+    marginLeft: 5,
+  },
+  statText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+  },
+  followSection: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
+  followStats: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+  },
+  followStatItem: {
+    alignItems: 'center',
+  },
+  followStatValue: {
     fontSize: 16,
     fontWeight: 'bold',
     color: colors.textPrimary,
   },
-  statLabel: {
+  followStatLabel: {
     fontSize: 12,
     color: colors.textSecondary,
-    marginTop: 2,
   },
-  editProfileButton: {
-    backgroundColor: '#4B3A8E',
+  verticalDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: colors.border,
+    marginHorizontal: 16,
+  },
+  profileActionButton: {
+    flex: 1, 
+    paddingVertical: 7,
     borderRadius: 12,
-    paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 16,
+    justifyContent: 'center',
+    marginRight: 24,
   },
-  editProfileButtonText: {
-    color: colors.white,
+  actionButtonText: {
+    color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  infoRow: {
+  detailsSection: {
+    paddingTop: 16,
+    marginHorizontal: 16,
+    borderTopColor: colors.border,
+  },
+  detailRow: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingVertical: 16,
   },
-  infoLabel: {
+  detailLabel: {
     fontSize: 14,
     color: colors.textSecondary,
   },
-  infoValue: {
+  detailValue: {
     fontSize: 14,
     color: colors.textPrimary,
-    flexShrink: 1,
-    textAlign: 'left',
-  },
-  referralContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  shareIcon: {
-    fontSize: 18,
-    color: colors.primary,
-    marginLeft: 8,
-  },
-  actionButton: {
-    backgroundColor: '#4B3A8E',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  actionButtonText: {
-    color: colors.white,
-    fontSize: 15,
     fontWeight: 'bold',
-  },
-  bioText: {
-    fontSize: 14,
-    color: colors.textPrimary,
-    lineHeight: 22,
-    textAlign: 'right',
-    marginTop: 8,
   },
 });
