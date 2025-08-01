@@ -8,18 +8,22 @@ let isConnected = false;
 
 const sendPing = () => {
   if (ws && ws.readyState === WebSocket.OPEN) {
+    // console.log('[WebSocket] Sending PING');
     ws.send('PING');
     pingTimeout = setTimeout(sendPing, 20000);
   }
 };
 
 const onMessageReceived = (event) => {
+  // console.log('[WebSocket] Raw message received:', event.data);
   const messageData = event.data;
   if (messageData === 'PONG') {
+    // console.log('[WebSocket] PONG received.');
     return;
   }
   try {
     const parsedData = JSON.parse(messageData);
+    // console.log('[WebSocket] Parsed message:', parsedData);
     useChatStore.getState().websocketMessageReceived(parsedData);
   } catch (error) {
     console.error('[WebSocket] Error processing Kafka message:', error);
@@ -29,7 +33,7 @@ const onMessageReceived = (event) => {
 export const initWebSocket = async () => {
   const netState = await NetInfo.fetch();
   if (!netState.isConnected) {
-    console.log('[WebSocket] No internet connection. Skipping connection attempt.');
+    // console.log('[WebSocket] No internet connection. Skipping connection attempt.');
     return;
   }
 
@@ -41,7 +45,7 @@ export const initWebSocket = async () => {
   ws = new WebSocket(KAFKA_WEBSOCKET_URL);
 
   ws.onopen = () => {
-    console.log('[WebSocket] Kafka connection established successfully.');
+    // console.log('[WebSocket] Kafka connection established successfully.');
     sendPing();
   };
 
@@ -52,7 +56,7 @@ export const initWebSocket = async () => {
   };
  
   ws.onclose = () => {
-    console.log('[WebSocket] Kafka connection closed.');
+    // console.log('[WebSocket] Kafka connection closed.');
     if (pingTimeout) clearTimeout(pingTimeout);
   };
 };
@@ -66,8 +70,9 @@ export const disconnectWebSocket = () => {
 };
 
 const handleConnectivityChange = (state) => {
+  // console.log('[NetInfo] Connectivity changed:', state);
   if (state.isConnected && !isConnected) {
-    console.log('[NetInfo] Connection is back online. Attempting to connect WebSocket.');
+    // console.log('[NetInfo] Connection is back online. Attempting to connect WebSocket.');
     initWebSocket();
   }
   isConnected = state.isConnected;

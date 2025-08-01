@@ -17,6 +17,7 @@ const App = () => {
   const { fetchOwnProfile } = useUserStore();
 
   useEffect(() => {
+    // console.log('[App.js] Main useEffect mounting...');
     const unsubscribe = setupNotificationHandlers();
     initializeNetworkObserver();
     registerDevice();
@@ -24,6 +25,7 @@ const App = () => {
     fetchChats({ syncType: 1 });
 
     return () => {
+      // console.log('[App.js] Main useEffect unmounting...');
       unsubscribe();
     };
   }, [registerDevice, fetchChats, fetchOwnProfile]);

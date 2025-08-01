@@ -8,10 +8,10 @@ import { t } from '../../utils/localizationUtils';
 import { FETCH_PROFILE, FETCH_OWN_PROFILE } from './actions';
 
 async function saveUserToDB(profileData) {
+  // console.log('[DB] Saving user to DB:', profileData.remoteId);
   const usersCollection = database.get('users');
   const userId = String(profileData.id);
   const existingUsers = await usersCollection.query(Q.where('remote_id', userId)).fetch();
-
   const userData = {
     remoteId: userId,
     name: profileData.name || t('profile.defaultName'),
@@ -27,27 +27,28 @@ async function saveUserToDB(profileData) {
     followed: profileData.followed,
     createdDate: profileData.created_date,
   };
-
   await database.write(async () => {
     if (existingUsers.length > 0) {
+      // console.log('[DB] Updating existing user:', userId);
       await existingUsers[0].update(record => {
         Object.assign(record, userData);
       });
     } else {
+      // console.log('[DB] Creating new user:', userId);
       await usersCollection.create(record => {
         Object.assign(record, userData);
       });
     }
   });
 }
-
 function* fetchProfileSaga(action) {
+  // console.log('[SAGA] Starting fetchProfileSaga with payload:', action.payload);
   const { userId } = action.payload;
   if (!userId) return;
-
   yield setState({ isLoading: true, error: null });
   try {
     const response = yield call(getProfileInfo, userId);
+    // console.log('[SAGA] fetchProfileSaga API call successful.');
     if (response.data.status === 'success' && response.data.result.length > 0) {
       const profile = response.data.result[0];
       yield call(saveUserToDB, profile);
@@ -56,23 +57,24 @@ function* fetchProfileSaga(action) {
       throw new Error(response.data.reason || t('profile.notFound'));
     }
   } catch (error) {
+    // console.error('[SAGA] Error in fetchProfileSaga:', error.message);
     yield setState({ error: error.message, isLoading: false });
   }
 }
-
-function* fetchOwnProfileSaga() {
+function* fetchOwnProfileSaga(action) {
+  // console.log('[SAGA] Starting fetchOwnProfileSaga.');
   try {
     const { OWNER_USER_ID } = require('../../api/config');
     const response = yield call(getProfileInfo, OWNER_USER_ID);
+    // console.log('[SAGA] fetchOwnProfileSaga API call successful.');
     if (response.data.status === 'success' && response.data.result.length > 0) {
       const profile = response.data.result[0];
       yield call(saveUserToDB, profile);
     }
   } catch (error) {
-    console.error('Failed to fetch own profile:', error.message);
+    // console.error('[SAGA] Error in fetchOwnProfileSaga:', error.message);
   }
 }
-
 export function* userSaga() {
   yield takeLatest(FETCH_PROFILE, fetchProfileSaga);
   yield takeLatest(FETCH_OWN_PROFILE, fetchOwnProfileSaga);
